@@ -1,0 +1,53 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.mainBoard {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+.row {
+    margin: 0;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.cell {
+    margin: -1px;
+    width: 2vw;
+    height: 2vw;
+    border: 1px solid #808080;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.color-sample {
+    width: 40px;
+    height: 20px;
+}
+
+.buttonContainer {
+    margin-top: 2vh;
+}
