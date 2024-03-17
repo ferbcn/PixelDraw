@@ -21,7 +21,7 @@ namespace MyWebApplication.Models
             {
                 for (int j = 0; j < size; j++)
                 {
-                    board[i, j] = "white";
+                    board[i, j] = "#FFFFFF";
                 }
             }
         }

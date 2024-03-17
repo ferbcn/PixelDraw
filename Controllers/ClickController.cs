@@ -10,7 +10,8 @@ namespace MyWebApplication.Controllers
 {
     public class ClickController : Controller
     {
-        private String[] allColors = { "red", "green", "blue" };
+        
+        private String[] allColors = { "#b22222", "#006400", "#00008b" };  // red, green, blue
 
         private Random random = new();
 

@@ -23,6 +23,14 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// options for websockets
+var webSocketOptions = new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromMinutes(2)
+};
+
+app.UseWebSockets(webSocketOptions);
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -33,5 +41,8 @@ app.MapControllerRoute(
     name: "click",
     pattern: "{controller=Click}/{action=Show}/");
 
+app.MapControllerRoute(
+    name: "socket",
+    pattern: "{controller=WebSocket}/{action=Index}/");
 
 app.Run();

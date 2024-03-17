@@ -31,7 +31,6 @@ namespace MyWebApplication.Controllers
                 myboard.SetCell(cell.Y, cell.X, cell.Color);
 
             }
-
             ViewData["Size"] = myboard.GetSize();
             return View("Index");
         }
