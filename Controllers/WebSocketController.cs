@@ -1,12 +1,29 @@
-﻿using System.Net.WebSockets;
+﻿using System.Net.Sockets;
+using System.Net.WebSockets;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MyWebApplication.Data;
 using MyWebApplication.Models;
 namespace MyWebApplication.Controllers;
 
-// <snippet>
+
 public class WebSocketController : Controller
 {
+    // all users need to access the _sockets list for broadcasating to other useres
+    private static List<WebSocket> _sockets = new List<WebSocket>();
+
+    private MyWebApplicationContext _context;
+
+    private const String newColor = "#DD3333";
+    private const String baseColor = "#FFFFFF";
+
+    private static Random random = new();
+
+    public WebSocketController(MyWebApplicationContext context)
+    {
+        _context = context;
+    }
 
     public IActionResult Index()
     {
@@ -26,7 +43,6 @@ public class WebSocketController : Controller
             HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
         }
     }
-    // </snippet>
 
     private static async Task Echo(WebSocket webSocket)
     {
@@ -45,6 +61,84 @@ public class WebSocketController : Controller
             receiveResult = await webSocket.ReceiveAsync(
                 new ArraySegment<byte>(buffer), CancellationToken.None);
         }
+
+        await webSocket.CloseAsync(
+            receiveResult.CloseStatus.Value,
+            receiveResult.CloseStatusDescription,
+            CancellationToken.None);
+    }
+
+    [HttpGet("/wsclick")]
+    public async Task GetClick()
+    {
+        if (HttpContext.WebSockets.IsWebSocketRequest)
+        {
+            using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
+            _sockets.Add(webSocket); // Add the new WebSocket to the list.
+            await ClickCell(webSocket);
+            _sockets.Remove(webSocket); // Remove the WebSocket when it's done
+        }
+        else
+        {
+            HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+        }
+    }
+
+    public async Task ClickCell(WebSocket webSocket)
+    {
+        var buffer = new byte[1024 * 4];
+        WebSocketReceiveResult receiveResult;
+
+        do
+        {
+            receiveResult = await webSocket.ReceiveAsync(
+                new ArraySegment<byte>(buffer), CancellationToken.None);
+
+            var receivedString = Encoding.UTF8.GetString(buffer, 0, receiveResult.Count);
+            int i = int.Parse(receivedString.Split(":")[0]);
+            int j = int.Parse(receivedString.Split(":")[1]);
+
+            Cell? currentCell = await _context.Cell.FirstOrDefaultAsync(c => c.X == j && c.Y == i);
+
+            if (currentCell != null)
+            {
+                _context.Remove(currentCell);
+            }
+            else
+            {
+                Cell newCell = new() { X = j, Y = i, Color = newColor };
+                _context.Add(newCell);
+            }
+
+            await _context.SaveChangesAsync();
+
+            string messageToSend;
+            if (currentCell != null)
+            {
+                messageToSend = $"{i}:{j}:{baseColor}";
+            }
+            else
+            {
+                messageToSend = $"{i}:{j}:{newColor}";
+            }
+
+            var sendBuffer = Encoding.UTF8.GetBytes(messageToSend);
+
+
+            // After saving changes to the database, broadcast the message to all connected clients.
+            foreach (var socket in _sockets)
+            {
+                if (socket.State == WebSocketState.Open)
+                {
+                    await socket.SendAsync(
+                        new ArraySegment<byte>(sendBuffer, 0, sendBuffer.Length),
+                        receiveResult.MessageType,
+                        receiveResult.EndOfMessage,
+                        CancellationToken.None);
+                }
+            }
+
+        } while (!receiveResult.CloseStatus.HasValue);
 
         await webSocket.CloseAsync(
             receiveResult.CloseStatus.Value,

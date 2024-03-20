@@ -38,10 +38,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}");
 
 app.MapControllerRoute(
-    name: "click",
-    pattern: "{controller=Click}/{action=Show}/");
-
-app.MapControllerRoute(
     name: "socket",
     pattern: "{controller=WebSocket}/{action=Index}/");
 

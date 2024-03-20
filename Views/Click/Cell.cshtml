@@ -1,7 +1,0 @@
-﻿@{
-    var i = ViewData["i"] as int?;
-    var j = ViewData["j"] as int?;
-    var color = ViewData["Color"] as string;
-    Layout = null;
-}
-<div hx-post="/Click/Cell?i=@i&j=@j" hx-swap="outerHTML" id="cell_@i/@j" class="cell" style="background: @color"></div>
