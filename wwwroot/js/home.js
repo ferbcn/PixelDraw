@@ -37,7 +37,7 @@ socket.onmessage = function (event) {
     var receivedColor = cell[2];
     var cell = document.getElementById('cell_' + i + "/" + j);
     cell.style.backgroundColor = receivedColor;
-    prevColor = receivedColor;
+    prevColor = receivedColor; // avoid overwriting the new color on mouseleave
 };
 
 function updateState() {
