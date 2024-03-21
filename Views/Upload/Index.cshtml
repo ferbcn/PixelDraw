@@ -1,0 +1,19 @@
+﻿<script src="~/lib/htmx/htmx.min.js"></script>
+
+<div class="text-center">
+	<h3 class="display-4">Upload a file...</h3>
+   
+	<div class="fileUploadContainer">
+		<form hx-encoding='multipart/form-data' hx-post='/OnPostUploadAsync'
+			  _='on htmx:xhr:progress(loaded, total) set #progress.value to (loaded/total)*100'>
+			<input type='file' name='formFile'>
+			<button>
+				Upload
+			</button>
+			<progress id='progress' value='0' max='100'></progress>
+		</form>
+	</div>
+
+</div>
+
+

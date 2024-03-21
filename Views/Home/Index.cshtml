@@ -1,10 +1,11 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "MyPlace";
     var board = ViewData["Board"] as String[,];
     var boardSize = (int?) ViewData["Size"];
 }
 
 @model IEnumerable<MyWebApplication.Models.Cell>
+
 
 <script src="~/lib/htmx/htmx.min.js"></script>
 

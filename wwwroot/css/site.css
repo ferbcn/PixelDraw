@@ -71,3 +71,15 @@ table {
     background-color: green;
     color: white
 }
+
+.uploadedImage{
+
+}
+
+#originalImage{
+    width: 80vw;
+}
+
+#resizedImage{
+    width: 80vw;
+}

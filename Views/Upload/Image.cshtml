@@ -1,0 +1,16 @@
+﻿@{
+	var image_b64 = ViewData["image_data"] as String;
+	var image_b64_sm = ViewData["image_data_sm"] as String;
+	Layout = null;
+}
+
+
+<div class="text-center">
+	<div class="uploadedImage">
+		<img id="originalImage" src="@image_b64" />
+	</div>
+	<br />
+	<div class="uploadedImage">
+		<img id="resizedImage" src="@image_b64_sm" />
+	</div>
+</div>

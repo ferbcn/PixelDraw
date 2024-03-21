@@ -50,4 +50,8 @@ app.MapControllerRoute(
     name: "socket",
     pattern: "{controller=WebSocket}/{action=Index}/");
 
+app.MapControllerRoute(
+    name: "upload",
+    pattern: "{controller=Upload}/{action=Index}/");
+
 app.Run();
