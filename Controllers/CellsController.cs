@@ -159,5 +159,15 @@ namespace MyWebApplication.Controllers
         {
           return (_context.Cell?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        [HttpPost, ActionName("Reset")]
+        public async Task<IActionResult> Reset()
+        {
+            var allCells = _context.Cell;
+            _context.Cell.RemoveRange(allCells);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", "Home");
+        }
+    
     }
 }

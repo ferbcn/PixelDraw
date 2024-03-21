@@ -1,9 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using MyWebApplication.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+// Read the connection string from the appsettings.json file
+// var DB_CONN_STRING = builder.Configuration["PostgreSQL:ConnectionString"];
+// Read environmental variable DB_STRING
+var DB_CONN_STRING = Environment.GetEnvironmentVariable("DB_STRING");
 builder.Services.AddDbContext<MyWebApplicationContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MyWebApplicationContext") ?? throw new InvalidOperationException("Connection string 'MyWebApplicationContext' not found.")));
+    // options.UseSqlServer(builder.Configuration.GetConnectionString("MyWebApplicationContext") ?? throw new InvalidOperationException("Connection string 'MyWebApplicationContext' not found.")));
+    options.UseNpgsql(DB_CONN_STRING ?? throw new InvalidOperationException("Connection string 'MyPostgreSQLContext' not found."))
+);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

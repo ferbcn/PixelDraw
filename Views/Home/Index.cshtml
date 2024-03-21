@@ -19,14 +19,13 @@
                 @for (int j = 0; j < boardSize; j++)
                 {
                     <div onclick="clickCell(@i,@j)" id="cell_@i/@j" class="cell" style="background: @board?[i, j]"></div>
-                    <!--<div hx-post="/Click/Cell?i=@i&j=@j" hx-swap="outerHTML" id="cell_@i/@j" class="cell" style="background: @board?[i, j]"></div>-->
                 }
             </div>
 
         }
     </div>
     <div class="buttonContainer">
-        <button class="btn btn-danger" hx-post="/Click/Reset" hx-target="body" class="btn btn-primary">Reset</button>
+        <button class="btn btn-danger" hx-post="/Cells/Reset" hx-target="body" class="btn btn-primary">Reset</button>
         <p>Socket state: <span id="stateLabel">Ready to connect...</span></p>
     </div>
 
