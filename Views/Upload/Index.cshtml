@@ -4,8 +4,7 @@
 	<h3 class="display-4">Upload a file...</h3>
    
 	<div class="fileUploadContainer">
-		<form hx-encoding='multipart/form-data' hx-post='/OnPostUploadAsync'
-			  _='on htmx:xhr:progress(loaded, total) set #progress.value to (loaded/total)*100'>
+		<form id='form' hx-encoding='multipart/form-data' hx-post='/OnPostUploadAsync'>
 			<input type='file' name='formFile'>
 			<button>
 				Upload
@@ -13,7 +12,12 @@
 			<progress id='progress' value='0' max='100'></progress>
 		</form>
 	</div>
-
 </div>
+
+<script>
+	htmx.on('#form', 'htmx:xhr:progress', function (evt) {
+		htmx.find('#progress').setAttribute('value', evt.detail.loaded / evt.detail.total * 100)
+	});
+</script>
 
 

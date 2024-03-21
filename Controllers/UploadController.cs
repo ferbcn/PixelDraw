@@ -31,8 +31,8 @@ namespace MyWebApplication.Controllers
 				// read data from file
 				byte[] data_original = System.IO.File.ReadAllBytes(filePath);
 				// resize image to 100x100
-				byte[] data = ImageResizer.Resize(data_original, 100, 100);
-				data = ImageResizer.Convert(data);
+				byte[] data = ImageConverter.Resize(data_original, 100, 100);
+				data = ImageConverter.Convert(data);
 				// return image to client
 				ViewData["image_data"] = $"data:image/png;base64,{Convert.ToBase64String(data_original)}";
 				ViewData["image_data_sm"] = $"data:image/png;base64,{Convert.ToBase64String(data)}";
