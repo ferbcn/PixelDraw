@@ -1,16 +1,22 @@
 ﻿<script src="~/lib/htmx/htmx.min.js"></script>
 
 <div class="text-center">
-	<h3 class="display-4">Upload a file...</h3>
+	<h3 class="display-4">Upload some pixels...</h3>
    
 	<div class="fileUploadContainer">
-		<form id='form' hx-encoding='multipart/form-data' hx-post='/OnPostUploadAsync'>
+		<form id='form' hx-encoding='multipart/form-data' hx-post='/OnPostUploadAsync' hx-swap="innerHTML" hx-target="#imageResponse">
 			<input type='file' name='formFile'>
 			<button>
 				Upload
 			</button>
 			<progress id='progress' value='0' max='100'></progress>
+			<div class="sliderContainer">
+				Treshold: <input name="treshold" type="range" min="1" max="100" value="50" hx-post='/OnPostUploadAsync'>
+			</div>
 		</form>
+	</div>
+	<div id="imageResponse">
+		<!-- Image will be displayed here -->
 	</div>
 </div>
 

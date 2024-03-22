@@ -22,7 +22,6 @@ namespace MyWebApplication.Controllers
 
         public IActionResult Index()
         {
-            ViewData["Board"] = myboard.GetBoard();
             // read all Cells in Db and apply to board
             List<Cell> cells = _context.Cell.ToList();
             foreach (var cell in cells)
@@ -31,6 +30,7 @@ namespace MyWebApplication.Controllers
                 myboard.SetCell(cell.Y, cell.X, cell.Color);
 
             }
+            ViewData["Board"] = myboard.GetBoard();
             ViewData["Size"] = myboard.GetSize();
             return View("Index");
         }

@@ -1,11 +1,14 @@
 ﻿@{
 	var image_b64 = ViewData["image_data"] as String;
 	var image_b64_sm = ViewData["image_data_sm"] as String;
+	var board = ViewData["Board"] as String[,];
+	var boardSize = (int?)ViewData["Size"];
 	Layout = null;
 }
 
 
 <div class="text-center">
+
 	<div class="uploadedImage">
 		<img id="originalImage" src="@image_b64" />
 	</div>
@@ -13,4 +16,17 @@
 	<div class="uploadedImage">
 		<img id="resizedImage" src="@image_b64_sm" />
 	</div>
+
+	<div class="mainBoard">
+		@for (int i = 0; i < boardSize; i++)
+		{
+			<div class="row">
+				@for (int j = 0; j < boardSize; j++)
+				{
+					<div onclick="clickCell(@i,@j)" id="cell_@i/@j" class="cell" style="background: @board?[i, j]"></div>
+				}
+			</div>
+		}
+	</div>
+
 </div>
