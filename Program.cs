@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 var DB_CONN_STRING = Environment.GetEnvironmentVariable("DB_STRING");
 
 builder.Services.AddDbContext<MyWebApplicationContext>(options =>
-    // options.UseSqlServer(builder.Configuration.GetConnectionString("MyWebApplicationContext") ?? throw new InvalidOperationException("Connection string 'MyWebApplicationContext' not found.")));
+    // options.UseSqlServer(builder.Configuration.GetConnectionString("MyWebApplicationContext") ?? throw new InvalidOperationException("Connection string 'MyWebApplicationContext' not found."))
     options.UseNpgsql(DB_CONN_STRING ?? throw new InvalidOperationException("Connection string 'MyPostgreSQLContext' not found."))
 );
 
@@ -53,5 +53,9 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "upload",
     pattern: "{controller=Upload}/{action=Index}/");
+
+app.MapControllerRoute(
+    name: "upload",
+    pattern: "{controller=Board}/{action=Index}/");
 
 app.Run();

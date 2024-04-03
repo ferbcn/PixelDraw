@@ -1,18 +1,18 @@
-﻿@{
-    ViewData["Title"] = "MyPlace";
+@model Board
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "MyBoard";
     var board = ViewData["Board"] as String[,];
     var boardSize = (int?) ViewData["Size"];
     var boardId = (int) ViewData["BoardId"];
+    var boardName = ViewData["BoardName"];
 }
-
-@model IEnumerable<MyWebApplication.Models.Cell>
-
 
 <script src="~/lib/htmx/htmx.min.js"></script>
 
-
 <div class="text-center">
-    <h3 class="display-4">Learn, build, repeat &#128421; &#128296; &#128257;...</h3>
+    <h3 class="display-4"><b>@boardName</b></h3>
     <p></p>
     <div class="mainBoard">
         @for (int i = 0; i < boardSize; i++)
@@ -27,8 +27,8 @@
         }
     </div>
     <div class="buttonContainer">
-        <button class="btn btn-danger" hx-post="/Cells/Reset" hx-target="body" class="btn btn-primary">Reset</button>
-        <p>Socket state: <span id="stateLabel">Ready to connect...</span></p>
+        <button class="btn btn-danger" hx-get="/Board/Reset?id=@boardId" hx-target="body" class="btn btn-primary">Reset</button>
+        <!--<p>Socket state: <span id="stateLabel">Ready to connect...</span></p>-->
     </div>
 
 </div>
@@ -37,3 +37,4 @@
 <script>
     var boardId = @boardId;
 </script>
+

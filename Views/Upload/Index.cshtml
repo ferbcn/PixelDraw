@@ -1,22 +1,48 @@
 ﻿<script src="~/lib/htmx/htmx.min.js"></script>
 
 <div class="text-center">
-	<h3 class="display-4">Upload some pixels...</h3>
+	<h3 class="display-4">Upload some pixels &#128126; </h3>
    
 	<div class="fileUploadContainer">
 		<form id='form' hx-encoding='multipart/form-data' hx-post='/OnPostUploadAsync' hx-swap="innerHTML" hx-target="#imageResponse">
-			<input type='file' name='formFile'>
-			<button>
-				Upload
-			</button>
-			<progress id='progress' value='0' max='100'></progress>
-			<div class="sliderContainer">
-				Treshold: <input name="treshold" type="range" min="1" max="100" value="50" hx-post='/OnPostUploadAsync'>
+			<div class="uploadContainer">
+				<input id="formFile" type='file' name='formFile' class="form-control">
+
+				<button class="btn btn-primary btn-success">
+					Upload
+				</button>
+			</div>
+			
+			<div class="uploadContainer">
+				<progress id='progress' class="progress-bar" value='0' max='100'></progress>
+			</div>
+
+			<div id="imageResponse">
+				<!-- Image will be displayed here -->
+			</div>
+			
+			<div class="uploadContainer">
+				<div class="sliderContainer">
+					Threshold: 
+					<input id="threshold" name="threshold" type="range" min="1" max="100" value="50" 
+					        hx-post='/UpdateThreshold'
+					        hx-target='#mainBoard'
+					        hx-swap="outerHTML"
+					        hx-include="#filename">
+				</div>
+			</div>
+			
+			<input type="hidden" name="filename" id="filename">
+			<div class="buttonContainer">
+				<button id="saveBtn" class="btn btn-primary btn-success"
+				        hx-encoding='multipart/form-data'
+				        hx-post="/Upload/Save"
+				        hx-target="body"
+				        hx-include="#filename">
+				Save
+				</button>
 			</div>
 		</form>
-	</div>
-	<div id="imageResponse">
-		<!-- Image will be displayed here -->
 	</div>
 </div>
 
@@ -27,3 +53,12 @@
 </script>
 
 
+<script>
+	// Needed to include the filename as htmx paylooad (WIP)
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('formFile').addEventListener('change', function(e) {
+            var fileName = e.target.value.split('\\').pop();
+            document.getElementById('filename').value = fileName;
+        });
+    });
+</script>

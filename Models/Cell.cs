@@ -12,6 +12,11 @@ namespace MyWebApplication.Models
         public int X { get; set; }
         public int Y { get; set; }
         public string Color { get; set; }
+        
+        [ForeignKey("Board")]
+        public int BoardId { get; set; }  // Nullable foreign key
+    
+        public Board Board { get; set; }
     }
     
 }

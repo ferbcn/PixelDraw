@@ -22,9 +22,20 @@ namespace MyWebApplication.Controllers
         // GET: Cells
         public async Task<IActionResult> Index()
         {
-              return _context.Cell != null ? 
-                          View(await _context.Cell.ToListAsync()) :
-                          Problem("Entity set 'MyWebApplicationContext.Cell'  is null.");
+            if (_context.Board == null)
+            {
+                return Problem("Entity set 'MyWebApplicationContext.Board' is null.");
+            }
+
+            
+            var lastBoard = await _context.Board.OrderByDescending(b => b.Id).FirstOrDefaultAsync();
+            
+            var cells = await _context.Cell.Where(c => c.BoardId == lastBoard.Id).ToListAsync();
+            //var boards = await _context.Board.Include(b => b.Cells).ToListAsync();
+            // Fetch all cells for each board and include in View
+            
+            return View(cells);
+            
         }
 
         // GET: Cells/Details/5
@@ -48,6 +59,7 @@ namespace MyWebApplication.Controllers
         // GET: Cells/Create
         public IActionResult Create()
         {
+            ViewData["BoardIds"] = new SelectList(_context.Board, "Id", "Name");
             return View();
         }
 
@@ -56,14 +68,14 @@ namespace MyWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,X,Y,Color")] Cell cell)
+        public async Task<IActionResult> Create([Bind("Id,X,Y,Color,BoardId")] Cell cell)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 _context.Add(cell);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             return View(cell);
         }
 
@@ -88,15 +100,15 @@ namespace MyWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,X,Y,Color")] Cell cell)
+        public async Task<IActionResult> Edit(int id, [Bind("BoardId,Id,X,Y,Color")] Cell cell)
         {
             if (id != cell.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 try
                 {
                     _context.Update(cell);
@@ -114,7 +126,7 @@ namespace MyWebApplication.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             return View(cell);
         }
 

@@ -10,31 +10,36 @@ var baseColor = '#FFFFFF'; // white
 var highColor = '#AAAAAA'; // lightgrey
 var prevColor; // to store the previous color of the cell when hovering over it
 
-
 // WebSockets connection and event handling
 
-stateLabel.innerHTML = "Connecting...";
+// stateLabel.innerHTML = "Connecting...";
 socket = new WebSocket(connectionUrl);
 
 socket.onopen = function (event) {
-    updateState();
+    // updateState();
     console.log("Connection opened");
 };
 
 socket.onclose = function (event) {
-    updateState();
+    // updateState();
     console.log('Connection closed. Code: ' + event.code + '. Reason: ' + event.reason);
 };
 
-socket.onerror = updateState;
+socket.onerror = function (event) {
+    // updateState();
+    console.log('Connection error. Code: ' + event.code + '. Reason: ' + event.reason);
+};
 
 socket.onmessage = function (event) {
     console.log('Socket data received ' + event.data);
-    // updtae the revieved cell
+    // update the revieved cell
     var cell = event.data.split(':');
-    var i = cell[0];
-    var j = cell[1];
-    var receivedColor = cell[2];
+    var rxBoardId = cell[0];
+    if (boardId != rxBoardId)
+        return;
+    var i = cell[1];
+    var j = cell[2];
+    var receivedColor = cell[3];
     var cell = document.getElementById('cell_' + i + "/" + j);
     cell.style.backgroundColor = receivedColor;
     prevColor = receivedColor; // avoid overwriting the new color on mouseleave
@@ -70,7 +75,7 @@ function clickCell (i, j) {
     if (!socket || socket.readyState !== WebSocket.OPEN) {
         alert("socket not connected");
     }
-    var data = i + ":" + j + ":" + mainColor;
+    var data = boardId + ":" + i + ":" + j + ":" + mainColor;
     prevColor = mainColor;
     socket.send(data);
     console.log('Sending socket data ' + data);

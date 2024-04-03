@@ -15,5 +15,10 @@ namespace MyWebApplication.Data
         }
 
         public DbSet<MyWebApplication.Models.Cell> Cell { get; set; } = default!;
+        
+        
+        public DbSet<MyWebApplication.Models.Board> Board { get; set; } = default!;
+        
+        
     }
 }

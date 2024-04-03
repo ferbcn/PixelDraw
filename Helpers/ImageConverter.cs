@@ -1,132 +1,142 @@
-using System.Drawing;
-using System.Drawing.Imaging;
+//using System.Drawing;
+//using System.Drawing.Imaging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+
 
 namespace MyWebApplication.Models
 {
 	public static class ImageConverter
 	{
-		public static byte[] Resize(byte[] imageData, int width, int height)
+		public static byte[] Resize(byte[] imageData, Int32 width, Int32 height)
 		{
-			using (var ms = new MemoryStream(imageData))
+			using var inStream = new MemoryStream(imageData);
+			using var outStream = new MemoryStream();
+			
+			using (Image<Rgba32> image = Image.Load<Rgba32>(inStream)) 
 			{
-				Image img = Image.FromStream(ms);
-				Bitmap bitm = new Bitmap(img, new Size(width, height));
-
-				return ImageToByteArray(bitm);
+				image.Mutate(x => x.Resize(width, height));
+				image.SaveAsJpeg(outStream);
 			}
+
+			return outStream.ToArray();
 		}
 		
 
 		public static byte[] ConvertToBW(byte[] imageData)
 		{
-			using (var ms = new MemoryStream(imageData))
+			using var inStream = new MemoryStream(imageData);
+			using var outStream = new MemoryStream();
+			
+			using (Image<Rgba32> image = Image.Load<Rgba32>(inStream)) 
 			{
-				Image img = Image.FromStream(ms);
-				img = ImageToBW(img);
-				Bitmap bitm = new Bitmap(img);
-
-				return ImageToByteArray(bitm);
+				image.Mutate(x => x.Grayscale());
+				image.SaveAsJpeg(outStream);
 			}
+
+			return outStream.ToArray();
+
 		}
 
-		public static string[,] ConvertToBwBitArray(byte[] imageData, int treshold)
+		public static string[,] ConvertToBwBitArray(byte[] imageData, int threshold)
 		{
-			float treshold_f = treshold / 100f;
-			//Console.WriteLine("Treshold: " + treshold_f);
+			float thresholdFloat = threshold / 100f;
 
-			using (var ms = new MemoryStream(imageData))
+			using var inStream = new MemoryStream(imageData);
+	    
+			using Image<Rgba32> image = Image.Load<Rgba32>(inStream);
+
+			string[,] bitArray = new string[image.Width, image.Height];
+
+			// Convert each pixel to 1 or 0
+			for (int y = 0; y < image.Height; y++)
 			{
-				Image img = Image.FromStream(ms);
-				Bitmap bitmap = new Bitmap(img);
-
-				string[,] bitArray = new string[50, 50];
-
-				// Convert each pixel to 1 or 0
-				for (int y = 0; y < bitmap.Height; y++)
+				for (int x = 0; x < image.Width; x++)
 				{
-					for (int x = 0; x < bitmap.Width; x++)
-					{
-						Color pixelColor = bitmap.GetPixel(x, y);
+					Rgba32 pixelColor = image[x, y];
 
-						// Calculate the brightness of the pixel
-						double brightness = pixelColor.GetBrightness();
+					// Calculate the brightness of the pixel. Formula for luminance considering human perception
+					double brightness = (0.299 * pixelColor.R + 0.587 * pixelColor.G + 0.114 * pixelColor.B) / 255;
 
-						// Assuming a threshold of 0.5 to determine if a pixel is on or off
-						// Adjust the threshold according to your needs
-						bitArray[x, y] = brightness < treshold_f ? "1" : "0";
-					}
+					// Assuming a threshold of 0.5 to determine if a pixel is on or off
+					// Adjust the threshold according to your needs
+					bitArray[x, y] = brightness < thresholdFloat ? "1" : "0";
 				}
-
-				return bitArray;
 			}
+			return bitArray;
 		}
 
-		private static string[] ImageToStringArray(Bitmap img)
+		private static string[] ImageToStringArray(byte[] imageData)
 		{
-			string[] result = new string[img.Height];
-			for (int i = 0; i < img.Height; i++)
+			using var image = Image.Load<Rgba32>(imageData);
+
+			string[] result = new string[image.Height];
+			for (int i = 0; i < image.Height; i++)
 			{
-				for (int j = 0; j < img.Width; j++)
+				for (int j = 0; j < image.Width; j++)
 				{
-					Color pixel = img.GetPixel(j, i);
+					var pixel = image[j, i];
 					result[i] += pixel.R.ToString("X2") + pixel.G.ToString("X2") + pixel.B.ToString("X2") + " ";
 				}
 			}
 			return result;
 		}
-
+		
 		public static byte[] ConvertToGreyScale(byte[] imageData)
 		{
-			using (var ms = new MemoryStream(imageData))
+			using var inStream = new MemoryStream(imageData);
+			using var outStream = new MemoryStream();
+    
+			using (Image<Rgba32> image = Image.Load<Rgba32>(inStream)) 
 			{
-				Image img = Image.FromStream(ms);
-				img = ImageToGrayScale(img);
-				Bitmap bitm = new Bitmap(img);
-
-				return ImageToByteArray(bitm);
+				image.Mutate(x => x.Grayscale());
+				image.SaveAsJpeg(outStream);
 			}
+
+			return outStream.ToArray();
 		}
 
-		private static byte[] ImageToByteArray(Image img)
+		private static byte[] ImageToByteArray(Image<Rgba32> img)
 		{
-			using (var ms = new MemoryStream())
-			{
-				img.Save(ms, ImageFormat.Png);
-				return ms.ToArray();
-			}
+			using var outStream = new MemoryStream();
+			img.SaveAsJpeg(outStream);
+			return outStream.ToArray();
 		}
-
-		private static Image ImageToGrayScale(Image img)
+		
+		private static byte[] ImageToBW(byte[] imageData)
 		{
-			Bitmap bmp = new Bitmap(img);
-			for (int i = 0; i < bmp.Width; i++)
+			using var inStream = new MemoryStream(imageData);
+			using var outStream = new MemoryStream();
+    
+			using (Image<Rgba32> image = Image.Load<Rgba32>(inStream)) 
 			{
-				for (int j = 0; j < bmp.Height; j++)
-				{
-					Color pixel = bmp.GetPixel(i, j);
-					int grayScale = (int)((pixel.R * 0.3) + (pixel.G * 0.59) + (pixel.B * 0.11));
-					Color newColor = Color.FromArgb(pixel.A, grayScale, grayScale, grayScale);
-					bmp.SetPixel(i, j, newColor);
-
-				}
+				image.Mutate(x => x.BinaryThreshold(0.5f) );
+				image.SaveAsJpeg(outStream);
 			}
-			return bmp;
+
+			return outStream.ToArray();
 		}
-
-		private static Image ImageToBW(Image img)
+		
+		public static string ConvertCellsToBase64Image(List<Cell> cells, int imgSize)
 		{
-			Bitmap bmp = new Bitmap(img);
-			for (int i = 0; i < bmp.Width; i++)
+			// Create an image from the cells
+			using var image = new Image<Rgba32>(imgSize, imgSize);
+
+			foreach (var cell in cells)
 			{
-				for (int j = 0; j < bmp.Height; j++)
-				{
-					Color pixel = bmp.GetPixel(i, j);
-					int grayScale = (int)((pixel.R * 0.3) + (pixel.G * 0.59) + (pixel.B * 0.11));
-					bmp.SetPixel(i, j, grayScale < 128 ? Color.Black : Color.White);
-				}
+				var x = cell.X;
+				var y = cell.Y;
+				image[x, y] = Rgba32.ParseHex(cell.Color);
 			}
-			return bmp;
+			
+			// Convert the image to a byte array
+			using var outStream = new MemoryStream();
+			image.SaveAsJpeg(outStream);
+			byte[] imageData = outStream.ToArray();
+
+			// Convert the byte array to a base64 string
+			return Convert.ToBase64String(imageData);
 		}
 	}
-
 }

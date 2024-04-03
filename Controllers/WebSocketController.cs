@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.Diagnostics;
+using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
@@ -95,10 +96,17 @@ public class WebSocketController : Controller
                 new ArraySegment<byte>(buffer), CancellationToken.None);
 
             var receivedString = Encoding.UTF8.GetString(buffer, 0, receiveResult.Count);
-            int i = int.Parse(receivedString.Split(":")[0]);
-            int j = int.Parse(receivedString.Split(":")[1]);
-
-            Cell? currentCell = await _context.Cell.FirstOrDefaultAsync(c => c.X == j && c.Y == i);
+            
+            var parts = receivedString.Split(":");
+            if (parts.Length < 3 ||
+                !int.TryParse(parts[0], out int boardId) ||
+                !int.TryParse(parts[1], out int i) ||
+                !int.TryParse(parts[2], out int j))
+            {
+                // Malformed request, ignore and continue with the next iteration
+                continue;
+            }
+            Cell? currentCell = await _context.Cell.FirstOrDefaultAsync(c => c.X == j && c.Y == i && c.BoardId == boardId);
 
             if (currentCell != null)
             {
@@ -106,7 +114,7 @@ public class WebSocketController : Controller
             }
             else
             {
-                Cell newCell = new() { X = j, Y = i, Color = newColor };
+                Cell newCell = new() { X = j, Y = i, Color = newColor, BoardId = boardId };
                 _context.Add(newCell);
             }
 
@@ -115,11 +123,11 @@ public class WebSocketController : Controller
             string messageToSend;
             if (currentCell != null)
             {
-                messageToSend = $"{i}:{j}:{baseColor}";
+                messageToSend = $"{boardId}:{i}:{j}:{baseColor}";
             }
             else
             {
-                messageToSend = $"{i}:{j}:{newColor}";
+                messageToSend = $"{boardId}:{i}:{j}:{newColor}";
             }
 
             var sendBuffer = Encoding.UTF8.GetBytes(messageToSend);

@@ -21,6 +21,23 @@ namespace MyWebApplication.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("MyWebApplication.Models.Board", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Board");
+                });
+
             modelBuilder.Entity("MyWebApplication.Models.Cell", b =>
                 {
                     b.Property<int>("Id")
@@ -28,6 +45,9 @@ namespace MyWebApplication.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BoardId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Color")
                         .IsRequired()
@@ -41,7 +61,25 @@ namespace MyWebApplication.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BoardId");
+
                     b.ToTable("Cell");
+                });
+
+            modelBuilder.Entity("MyWebApplication.Models.Cell", b =>
+                {
+                    b.HasOne("MyWebApplication.Models.Board", "Board")
+                        .WithMany("Cells")
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Board");
+                });
+
+            modelBuilder.Entity("MyWebApplication.Models.Board", b =>
+                {
+                    b.Navigation("Cells");
                 });
 #pragma warning restore 612, 618
         }

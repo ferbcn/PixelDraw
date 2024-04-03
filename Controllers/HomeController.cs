@@ -2,14 +2,13 @@
 using MyWebApplication.Data;
 using MyWebApplication.Models;
 using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace MyWebApplication.Controllers
 {
     public class HomeController : Controller
     {
-        Board myboard = new Board(50);
-        
         private readonly ILogger<HomeController> _logger;
 
         private readonly MyWebApplicationContext _context;
@@ -20,19 +19,15 @@ namespace MyWebApplication.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            // read all Cells in Db and apply to board
-            List<Cell> cells = _context.Cell.ToList();
-            foreach (var cell in cells)
-            {
-
-                myboard.SetCell(cell.Y, cell.X, cell.Color);
-
-            }
-            ViewData["Board"] = myboard.GetBoard();
-            ViewData["Size"] = myboard.GetSize();
-            return View("Index");
+            // int totalBoards = _context.Board.Count();
+            var allBoards = await _context.Board.ToListAsync();
+            Random random = new Random();
+            int randomIndex = random.Next(0, allBoards.Count);
+            var randomBoardId = allBoards[randomIndex].Id;
+            // Redirect to Board/Load?id=@randomBoardId 
+            return RedirectToAction("Load", "Board", new { id = randomBoardId });
         }
         
         public IActionResult Privacy()

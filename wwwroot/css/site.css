@@ -76,16 +76,26 @@ table {
     color: white
 }
 
-.uploadedImage{
+.uploadedImageContainer{
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
 
+input-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 #originalImage{
-    width: 60vw;
+    width: 30vw;
 }
 
 #resizedImage{
-    width: 60vw;
+    width: 30vw;
 }
 
 .sliderContainer {
@@ -93,4 +103,29 @@ table {
     display: flex;
     justify-content: space-evenly;
     align-content: center;
+}
+
+#formFile {
+    max-width: 50vw;
+}
+
+.fileUploadContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.progress-bar{
+    width: 50vw;    
+    border-radius: 3px;
+    background-color: green;
+}
+
+.uploadContainer{
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
 }
