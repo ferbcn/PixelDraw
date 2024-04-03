@@ -32,10 +32,27 @@ namespace MyWebApplication.Controllers
 			return data;
 		}
 
-		private string[,] ImageToBitString(byte[] data, int threshold)
+		private string[,] ImageToBitString(byte[] data, int threshold, bool invert=false)
 		{	
 			string[,] bw_data_str = ImageConverter.ConvertToBwBitArray(data, threshold);
+			if (invert)
+			{
+				bw_data_str = InvertImage(bw_data_str, CONV_SIZE);
+			}
 			return bw_data_str;
+		}
+		
+		private string[,] InvertImage(string[,] imageData, Int16 imageSize)
+		{
+			for(Int16 y = 0; y < imageSize; y++)
+			{
+				for(Int16 x = 0; x < imageSize; x++)
+				{
+					imageData[y, x] = imageData[y, x] == "0" ? "1" : "0";
+				}
+			}
+
+			return imageData;
 		}
 		
 		public IActionResult Index()
@@ -46,7 +63,7 @@ namespace MyWebApplication.Controllers
 
 		[HttpPost]
 		[Route("OnPostUploadAsync")]
-		public async Task<IActionResult> OnPostUploadAsync(IFormFile formFile, int threshold)
+		public async Task<IActionResult> OnPostUploadAsync(IFormFile formFile, int threshold=50)
 		{
 			long size = formFile.Length;
 			var filePath = Path.GetTempFileName();
@@ -65,7 +82,7 @@ namespace MyWebApplication.Controllers
 				var filename = formFile.FileName;
 				
 				// save to temp.png
-				System.IO.File.WriteAllBytes(filename, img_data_raw);
+				System.IO.File.WriteAllBytes("Temp/"+filename, img_data_raw);
 				
 				// resize image and convert to greyscale byte string array
 				byte[] img_data_grey = resizeImageToGreyscale(img_data_raw);
@@ -94,16 +111,16 @@ namespace MyWebApplication.Controllers
 		
 		[HttpPost]
 		[Route("UpdateThreshold")]
-		public async Task<IActionResult> UpdateThreshold(int threshold, string filename)
+		public async Task<IActionResult> UpdateThreshold(int threshold, string filename, bool invert)
 		{
 			// load image from temp.png
-			byte[] img_data_raw = System.IO.File.ReadAllBytes(filename);
+			byte[] img_data_raw = System.IO.File.ReadAllBytes("Temp/" + filename);
 			
 			// resize image and convert to greyscale byte string array
 			byte[] img_data_grey = resizeImageToGreyscale(img_data_raw);
 			
 			// convert to byte string array
-			string[,] bw_data_str = ImageToBitString(img_data_grey, threshold);	
+			string[,] bw_data_str = ImageToBitString(img_data_grey, threshold, invert);	
 
 			// create board from reduced image
 			Board_DTO myboard = new Board_DTO(CONV_SIZE, bw_data_str);
@@ -111,21 +128,21 @@ namespace MyWebApplication.Controllers
 			ViewData["Board"] = myboard.GetBoardString();
 			ViewData["Size"] = myboard.GetSize();
 
-			return View("Main");
+			return View("Board");
 		}
 		
 		[HttpPost]
-		public async Task<IActionResult> Save (int threshold, string filename)
+		public async Task<IActionResult> Save (int threshold, string filename, bool invert)
 		{
 			// Console.WriteLine("Save image: " + filename);
 			// load image from temp.png
-			byte[] img_data_raw = System.IO.File.ReadAllBytes(filename);
+			byte[] img_data_raw = System.IO.File.ReadAllBytes("Temp/" + filename);
 			
 			// resize image and convert to greyscale byte string array
 			byte[] img_data_grey = resizeImageToGreyscale(img_data_raw);
 				
 			// convert to byte string array
-			string[,] bw_data_str = ImageToBitString(img_data_grey, threshold);	
+			string[,] bw_data_str = ImageToBitString(img_data_grey, threshold, invert);	
 				
 			// create board from reduced image
 			Board_DTO myboard = new Board_DTO(CONV_SIZE, bw_data_str);
@@ -156,7 +173,7 @@ namespace MyWebApplication.Controllers
 			}
 			await _context.SaveChangesAsync();
 			
-			System.IO.File.Delete(filename);
+			System.IO.File.Delete("Temp/" + filename);
 			
 			// return RedirectToAction(nameof(Index));
 			return RedirectToAction("Load", "Board", new { id = newBoard.Id });

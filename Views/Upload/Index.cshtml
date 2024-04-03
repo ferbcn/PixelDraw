@@ -21,27 +21,10 @@
 				<!-- Image will be displayed here -->
 			</div>
 			
-			<div class="uploadContainer">
-				<div class="sliderContainer">
-					Threshold: 
-					<input id="threshold" name="threshold" type="range" min="1" max="100" value="50" 
-					        hx-post='/UpdateThreshold'
-					        hx-target='#mainBoard'
-					        hx-swap="outerHTML"
-					        hx-include="#filename">
-				</div>
-			</div>
-			
 			<input type="hidden" name="filename" id="filename">
-			<div class="buttonContainer">
-				<button id="saveBtn" class="btn btn-primary btn-success"
-				        hx-encoding='multipart/form-data'
-				        hx-post="/Upload/Save"
-				        hx-target="body"
-				        hx-include="#filename">
-				Save
-				</button>
-			</div>
+			
+			
+			
 		</form>
 	</div>
 </div>

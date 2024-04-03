@@ -29,7 +29,7 @@ namespace MyWebApplication.Controllers
             }
             else
             {
-                var boards = await _context.Board.ToListAsync();
+                var boards = await _context.Board.OrderByDescending(b => b.Id).ToListAsync();
                 //var boards = await _context.Board.Include(b => b.Cells).ToListAsync();
                 // Fetch all cells for each board and include in View
                 

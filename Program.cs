@@ -19,6 +19,13 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+// clear temp folder
+DirectoryInfo di = new DirectoryInfo("Temp");
+foreach (FileInfo file in di.GetFiles())
+{
+    file.Delete(); 
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
