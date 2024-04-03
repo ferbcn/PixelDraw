@@ -19,8 +19,13 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// clear temp folder
-DirectoryInfo di = new DirectoryInfo("Temp");
+// Create or clear Temp folder
+string tempFolderPath = "Temp";
+if (!Directory.Exists(tempFolderPath))
+{
+    Directory.CreateDirectory(tempFolderPath);
+}
+DirectoryInfo di = new DirectoryInfo(tempFolderPath);
 foreach (FileInfo file in di.GetFiles())
 {
     file.Delete(); 
