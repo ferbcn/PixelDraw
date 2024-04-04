@@ -21,7 +21,7 @@
             <div class="row">
                 @for (int j = 0; j < boardSize; j++)
                 {
-                    <div id="cell_@i/@j" class="cell" style="background: @board?[i, j]"></div>
+                    <div onclick="clickCell(@i,@j)" id="cell_@i/@j" class="cell" style="background: @board?[i, j]"></div>
                 }
             </div>
 

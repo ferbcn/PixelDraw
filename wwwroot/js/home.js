@@ -152,6 +152,7 @@ function enterCell(hoverCell) {
 var mouseDown = 0;
 document.body.onmousedown = function() {
     mouseDown = 1;
+    
 }
 document.body.onmouseup = function() {
     mouseDown = 0;
