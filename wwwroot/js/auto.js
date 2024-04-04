@@ -14,6 +14,7 @@ var grid = Array(50).fill().map(() => Array(50).fill('#FFFFFF'));
 
 var animationIsRunning = false;
 var timeout = 500;
+var animationInterval;
 
 var genCount = 0;
 var genCountElement = document.getElementById("genCount");
@@ -23,14 +24,18 @@ function clickCell (i, j) {
     let currentColor = grid[i][j];
     // console.log("Cell color: " + currentColor);
     
-    if (currentColor !== mainColor) {
-        currentColor = mainColor;
-    } else {
-        currentColor = baseColor;
-    }
     // color the cell on DOM
     var cell = document.getElementById('cell_' + i + "/" + j);
+    
+    if (currentColor !== mainColor) {
+        currentColor = mainColor;
+        // cell.innerHTML = "&#128126";
+    } else {
+        currentColor = baseColor;
+        // cell.innerHTML = "";
+    }
     cell.style.backgroundColor = currentColor;
+    
     // set prev color to the current color
     prevColor = currentColor;
     
@@ -57,29 +62,30 @@ document.getElementById("btnStart").addEventListener("click", function () {
     if (animationIsRunning) {
         console.log("Pausing Cellular Automata");
         animationIsRunning = false;
-        return;
+        StopAnimation();
     }
     else {
         console.log("Starting Cellular Automata");
         animationIsRunning = true;
+        StartAnimation();
     }
-    startStopAnimation();
 });
 
-function startStopAnimation(){
+function StopAnimation(){
+    clearInterval(animationInterval);
+}
+
+function StartAnimation(){
     // Local animation of cells in grid with JS
-    setInterval(() => {
-        if (!animationIsRunning) {
-            return;
-        }
-        // Set Counter 
+    animationInterval = setInterval(() => {
+        // Set Counter
         genCount++;
         genCountElement.innerHTML = genCount;
 
-        // run animation 
+        // run animation
         runCellularAutomata();
-
-    }, timeout);
+        
+    }, timeout); // timeout between frames, defines the speed of the animation
 }
 
 function runCellularAutomata(){
@@ -118,14 +124,16 @@ function runCellularAutomata(){
 }
 
 document.getElementById("btnPlus").addEventListener("click", function () {
-    if (timeout < 500) timeout += 10;
-    startStopAnimation();
+    if (timeout < 1000) timeout += 50;
+    StopAnimation();
+    StartAnimation();
     
 });
 
 document.getElementById("btnMinus").addEventListener("click", function () {
-    if (timeout > 10) timeout -= 10;
-    startStopAnimation();
+    if (timeout > 50) timeout -= 50;
+    StopAnimation();
+    StartAnimation();
 });
 
 document.getElementById("btnReset").addEventListener("click", function () {
@@ -137,6 +145,7 @@ document.getElementById("btnReset").addEventListener("click", function () {
         cell.style.backgroundColor = baseColor;
         grid = Array(50).fill().map(() => Array(50).fill('#FFFFFF'));
     });
+    StopAnimation();
 });
 
 function enterCell(hoverCell) {

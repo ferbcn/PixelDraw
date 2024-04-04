@@ -33,16 +33,6 @@ namespace MyWebApplication.Controllers
         public async Task<IActionResult> Auto()
         {
             Board_DTO myboard = new Board_DTO(50);
-            var col = "#DD3333";var cellsToSet = new List<(int, int)>
-            {
-                (22,22), (22,23), (22,24), (25,22), (25,23), (25,24), (23,21), (24,21), (23,25), (24,25), 
-                (24,20), (24,21), (24,22), (27,20), (27,21), (27,22), (25,19), (26,19), (25,23), (26,23) };
-
-            foreach (var (x, y) in cellsToSet)
-            {
-                myboard.SetCell(x, y, col);
-            }
-
             ViewData["Board"] = myboard.GetBoardString();
             ViewData["Size"] = myboard.GetSize();
             ViewData["Title"] = "Automata";
