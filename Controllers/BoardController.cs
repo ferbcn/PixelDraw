@@ -54,6 +54,18 @@ namespace MyWebApplication.Controllers
 
             return View(Board);
         }
+        
+        // GET: Board/New
+        public async Task<IActionResult>New()
+        {
+            // Create new board in DB
+            Board newBoard = new Board();
+            newBoard.Name = "NewBoard";
+            _context.Add(newBoard);
+            await _context.SaveChangesAsync();
+            // Redirect to Load View
+            return RedirectToAction("Load", "Board", new { id = newBoard.Id });
+        }
 
         // GET: Boards/Create
         public IActionResult Create()
