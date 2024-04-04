@@ -45,7 +45,7 @@ namespace MyWebApplication.Controllers
 			{
 				for(Int16 x = 0; x < imageSize; x++)
 				{
-					imageData[y, x] = imageData[y, x] == "0" ? "1" : "0";
+					imageData[x, y] = imageData[x, y] == "0" ? "1" : "0";
 				}
 			}
 

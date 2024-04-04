@@ -54,7 +54,7 @@ namespace MyWebApplication.Models
 			{
 				for (int x = 0; x < image.Width; x++)
 				{
-					Rgba32 pixelColor = image[x, y];
+					Rgba32 pixelColor = image[y, x];
 
 					// Calculate the brightness of the pixel. Formula for luminance considering human perception
 					double brightness = (0.299 * pixelColor.R + 0.587 * pixelColor.G + 0.114 * pixelColor.B) / 255;
