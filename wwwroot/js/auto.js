@@ -50,6 +50,31 @@ window.onload = function () {
     });
 }
 
+
+var mouseDown = 0;
+document.body.onmousedown = function() {
+    mouseDown = 1;
+}
+document.body.onmouseup = function() {
+    mouseDown = 0;
+}
+
+function enterCell(hoverCell) {
+    prevColor = hoverCell.style.backgroundColor;
+    prevColorHex = rgbToHex(hoverCell.style.backgroundColor);
+
+    // if the mouse is down and the color is not the same as the current color trigger click cell event for the current cell
+    if (mouseDown && prevColor !== mainColor) {
+        var cellId = hoverCell.id.split('_')[1];
+        var i = cellId.split('/')[0];
+        var j = cellId.split('/')[1];
+        clickCell(i, j);
+    }
+
+    hoverCell.style.backgroundColor = highColor;
+}
+
+
 // Cellular Automata animation
 document.getElementById("btnStart").addEventListener("click", function () {
     if (animationIsRunning) {
@@ -140,16 +165,6 @@ function runCellularAutomata(){
             }
         }
     }
-}
-
-function enterCell(hoverCell) {
-    prevColor = hoverCell.style.backgroundColor;
-    prevColorHex = rgbToHex(hoverCell.style.backgroundColor);
-    // avoid ghost color on quick mouse movements where prevColor would be set to a fading color
-    //if (!allColors.includes(prevColorHex)) { 
-    //    prevColor = "rgb(255, 255, 255)";
-    //}
-    hoverCell.style.backgroundColor = highColor;
 }
 
 function leaveCell(hoverCell) {
