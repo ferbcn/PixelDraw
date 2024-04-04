@@ -12,7 +12,8 @@
 <script src="~/lib/htmx/htmx.min.js"></script>
 
 <div class="text-center">
-    <h3 class="display-4"><b>@boardName</b></h3>
+    <h3 id="boardName" class="display-4">@boardName</h3>
+    <h3><input asp-for="Name" id="editInput" class="display-4" type="text" style="display: none;" /></h3>
     <p></p>
     <div class="mainBoard">
         @for (int i = 0; i < boardSize; i++)

@@ -131,3 +131,8 @@ input-container {
     justify-content: space-evenly;
     align-items: flex-end;
 }
+
+#editInput{
+    margin-left: 25%;
+    width: 50%;
+}

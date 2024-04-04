@@ -128,9 +128,8 @@ namespace MyWebApplication.Controllers
 
         // POST: Boards/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id, Name")] Board Board)
         {
             if (id != Board.Id)
@@ -142,7 +141,8 @@ namespace MyWebApplication.Controllers
             {
                 var errors = ModelState.SelectMany(x => x.Value.Errors.Select(z => z.Exception));
                 Console.WriteLine("INVALID MODEL STATE !!!");
-                Console.WriteLine(errors);
+                Console.WriteLine(Board.Id);
+                //Console.WriteLine(errors);
             }
 
             try

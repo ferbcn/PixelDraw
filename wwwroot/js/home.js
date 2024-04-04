@@ -45,8 +45,50 @@ socket.onmessage = function (event) {
     prevColor = receivedColor; // avoid overwriting the new color on mouseleave
 };
 
-function updateState() {
+/////////////////////////////////
+// EDIT Board Name dynamically //
+/////////////////////////////////
 
+document.getElementById('boardName').addEventListener('click', function() {
+    this.style.display = 'none';
+    var input = document.getElementById('editInput');
+    input.style.display = 'block';
+    input.value = this.textContent;
+    input.focus();
+});
+
+document.getElementById('editInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        this.style.display = 'none';
+        var label = document.getElementById('boardName');
+        label.style.display = 'block';
+        label.textContent = this.value;
+
+        // Send a POST request
+        // var boardId = /* the ID of the board you want to edit */;
+        var formData = new FormData();
+        formData.append('Id', boardId);
+        formData.append('Name', this.value);
+        
+        fetch(`Edit?id=${boardId}`, {
+            method: 'POST',
+            headers: {
+                
+            },
+            body: formData,
+        })
+        //.then(response => response.json())
+        //.then(data => console.log(data))
+        //.catch((error) => console.error('Error:', error));
+    }
+    else if (e.key === 'Escape') {
+        this.style.display = 'none';
+        var label = document.getElementById('boardName');
+        label.style.display = 'block';
+    }
+});
+
+function updateState() {
     if (!socket) {
         disable();
     } else {
@@ -69,7 +111,6 @@ function updateState() {
         }
     }
 }
-
 
 function clickCell (i, j) {
     if (!socket || socket.readyState !== WebSocket.OPEN) {
