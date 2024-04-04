@@ -24,12 +24,15 @@ namespace MyWebApplication.Controllers
             }
             else
             {
-                List<Board> boards = await _context.Board.OrderByDescending(b => b.Id).ToListAsync();
-                //var boards = await _context.Board.Include(b => b.Cells).ToListAsync();
+                
+                List<Board> boards = await _context.Board.OrderBy(b => b.Id).ToListAsync(); // Order by ID here
+                // TDDO: Inverse Order by Id
+                
                 // Fetch all cells for each board and include in View
                 var boardCellList = new List<List<Cell>>();
                 var boardIds = boards.Select(b => b.Id).ToList();
-                boardCellList = _context.Cell.Where(c => boardIds.Contains(c.BoardId)).GroupBy(c => c.BoardId).Select(g => g.ToList()).ToList();
+                boardCellList = _context.Cell.Where(c => boardIds.Contains(c.BoardId)).OrderBy(c => c.BoardId).GroupBy(c => c.BoardId).Select(g => g.ToList()).ToList(); // Order by Board ID here
+                // convert cells tom images
                 List<string> b64ImageList = new List<string>();
                 foreach (var boardCells in boardCellList)
                 {
@@ -37,7 +40,13 @@ namespace MyWebApplication.Controllers
                 }
                 // Include the base64 image strings in the ViewData
                 ViewData["BoardImages"] = b64ImageList;
-                return View(boards);
+                
+                BoardImageCellsViewModel boardImageCellsViewModel = new BoardImageCellsViewModel();
+                boardImageCellsViewModel.Boards = boards;
+                boardImageCellsViewModel.Cells = _context.Cell.ToList();
+                boardImageCellsViewModel.b64Images = b64ImageList;
+                
+                return View(boardImageCellsViewModel);
             }
         }
 

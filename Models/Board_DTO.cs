@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
+﻿
 namespace MyWebApplication.Models
 {
     public class Board_DTO

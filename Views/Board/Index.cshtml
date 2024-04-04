@@ -1,10 +1,11 @@
-﻿@model IEnumerable<MyWebApplication.Models.Board>
+﻿@model MyWebApplication.Models.BoardImageCellsViewModel
 
 @{
     ViewData["Title"] = "View Boards";
     // Convert Model to List
-    List<Board> boards = Model.ToList();
-    List<string> images = ViewData["BoardImages"] as List<string>;
+    List<Board> boards = Model.Boards.ToList();
+    List<Cell> cells = Model.Cells.ToList();
+    List<string> images = Model.b64Images.ToList();;
 }
 
 <h1>Saved Boards</h1>
@@ -15,51 +16,51 @@
 <table class="table">
     <thead>
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Id)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            Image
-        </th>
-        <th>
-        </th>
-    </tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Boards.First().Id)
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Preview
+            </th>
+            <th>
+                # Cells
+            </th>
+            <th>
+                
+            </th>
+        </tr>   
     </thead>
     <tbody>
-    @foreach (var item in Model) {
-    
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                
-            </td>
-            <td>
-                <a asp-action="Load" asp-route-id="@item.Id">Load</a> |
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-    }
-    
-    <div class="previewContainer">
-        @for(var i = 0; i < boards.Count; i++)
+        @for (var i = 0; i < boards.Count; i++)
         {
-            var item1 = boards[i];
-            var item2 = images[i];
-            // your code using itemModel1 and itemModel2
-            @item1.Name
-            <img src="data:image/png;base64,@item2" />
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => boards[i].Id)
+                </td>
+                <td>
+                    <a asp-action="Load" asp-route-id="@boards[i].Id">
+                        @Html.DisplayFor(modelItem => boards[i].Name)
+                    </a>
+                </td>
+                <td>
+                    <a asp-action="Load" asp-route-id="@boards[i].Id">
+                        <img src="data:image/png;base64,@images[i]"/>
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => boards[i].Cells.Count)
+                </td>
+                <td>
+                    <a asp-action="Load" asp-route-id="@boards[i].Id">Load</a> |
+                    <a asp-action="Edit" asp-route-id="@boards[i].Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@boards[i].Id">Delete</a>
+                </td>
+            </tr>
         }
-    </div>
+        
 
     </tbody>
 </table>
