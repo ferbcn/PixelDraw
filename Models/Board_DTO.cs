@@ -60,7 +60,7 @@ namespace MyWebApplication.Models
         // set cell
         public void SetCell(int x, int y, String color)
         {
-            board[x, y] = color;
+            board[y, x] = color;
         }
 
         // get cell

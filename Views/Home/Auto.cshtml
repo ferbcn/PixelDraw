@@ -1,0 +1,37 @@
+﻿@{
+    var board = ViewData["Board"] as String[,];
+    var boardSize = (int?) ViewData["Size"];
+}
+
+@model IEnumerable<MyWebApplication.Models.Cell>
+
+<script src="~/lib/htmx/htmx.min.js"></script>
+
+<div class="text-center">
+    <h3 class="display-4">Learn, build, repeat &#128421; &#128296; &#128257;...</h3>
+    <p></p>
+    <div class="mainBoard">
+        @for (int i = 0; i < boardSize; i++)
+        {
+            <div class="row">
+                @for (int j = 0; j < boardSize; j++)
+                {
+                    <div onclick="clickCell(@i,@j)" id="cell_@i/@j" class="cell" style="background: @board?[i, j]"></div>
+                }
+            </div>
+
+        }
+    </div>
+    <div class="genCountContainer">
+        Generations:<div id="genCount"></div>
+    </div>
+    <div class="buttonContainer">
+        <button id="btnReset" class="btn btn-danger" class="btn btn-primary">&#8634;</button>
+        <button id="btnStart" class="btn btn-light" class="btn btn-primary">&#9199;</button>
+        <button id="btnMinus" class="btn btn-light" class="btn btn-primary">&#10134;</button>
+        <button id="btnPlus" class="btn btn-light" class="btn btn-primary">&#10133;</button>
+    </div>
+
+</div>
+
+<script src="~/js/auto.js" asp-append-version="true"></script>

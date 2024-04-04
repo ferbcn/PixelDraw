@@ -126,7 +126,7 @@ namespace MyWebApplication.Controllers
             
             foreach (var cell in cells)
             {
-                myboard.SetCell(cell.Y, cell.X, cell.Color);
+                myboard.SetCell(cell.X, cell.Y, cell.Color);
             }
             
             ViewData["Board"] = myboard.GetBoardString();
