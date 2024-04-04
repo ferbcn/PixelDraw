@@ -1,10 +1,3 @@
-var stateLabel = document.getElementById("stateLabel");
-var socket;
-
-var scheme = document.location.protocol === "https:" ? "wss" : "ws";
-var port = document.location.port ? (":" + document.location.port) : "";
-var connectionUrl = scheme + "://" + document.location.hostname + port + "/wsclick";
-
 var mainColor = '#DD3333'; // red
 var baseColor = '#FFFFFF'; // white
 var highColor = '#AAAAAA'; // lightgrey
@@ -71,6 +64,32 @@ document.getElementById("btnStart").addEventListener("click", function () {
     }
 });
 
+// Buttons to control the speed of the animation
+document.getElementById("btnMinus").addEventListener("click", function () {
+    if (timeout < 1000) timeout += 50;
+    StopAnimation();
+    StartAnimation();
+
+});
+
+document.getElementById("btnPlus").addEventListener("click", function () {
+    if (timeout > 50) timeout -= 50;
+    StopAnimation();
+    StartAnimation();
+});
+
+document.getElementById("btnReset").addEventListener("click", function () {
+    animationIsRunning = false;
+    genCount = 0;
+    genCountElement.innerHTML = genCount;
+    var allCells = document.querySelectorAll('.cell');
+    allCells.forEach(cell => {
+        cell.style.backgroundColor = baseColor;
+        grid = Array(50).fill().map(() => Array(50).fill('#FFFFFF'));
+    });
+    StopAnimation();
+});
+
 function StopAnimation(){
     clearInterval(animationInterval);
 }
@@ -122,31 +141,6 @@ function runCellularAutomata(){
         }
     }
 }
-
-document.getElementById("btnPlus").addEventListener("click", function () {
-    if (timeout < 1000) timeout += 50;
-    StopAnimation();
-    StartAnimation();
-    
-});
-
-document.getElementById("btnMinus").addEventListener("click", function () {
-    if (timeout > 50) timeout -= 50;
-    StopAnimation();
-    StartAnimation();
-});
-
-document.getElementById("btnReset").addEventListener("click", function () {
-    animationIsRunning = false;
-    genCount = 0;
-    genCountElement.innerHTML = genCount;
-    var allCells = document.querySelectorAll('.cell');
-    allCells.forEach(cell => {
-        cell.style.backgroundColor = baseColor;
-        grid = Array(50).fill().map(() => Array(50).fill('#FFFFFF'));
-    });
-    StopAnimation();
-});
 
 function enterCell(hoverCell) {
     prevColor = hoverCell.style.backgroundColor;
