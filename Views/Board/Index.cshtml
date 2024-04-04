@@ -6,6 +6,7 @@
     List<Board> boards = Model.Boards.ToList();
     List<Cell> cells = Model.Cells.ToList();
     List<string> images = Model.b64Images.ToList();;
+    
 }
 
 <h1>Saved Boards</h1>
@@ -26,7 +27,7 @@
                 Preview
             </th>
             <th>
-                # Cells
+                Size
             </th>
             <th>
                 
@@ -34,33 +35,32 @@
         </tr>   
     </thead>
     <tbody>
-        @for (var i = 0; i < boards.Count; i++)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => boards[i].Id)
-                </td>
-                <td>
-                    <a asp-action="Load" asp-route-id="@boards[i].Id">
-                        @Html.DisplayFor(modelItem => boards[i].Name)
-                    </a>
-                </td>
-                <td>
-                    <a asp-action="Load" asp-route-id="@boards[i].Id">
-                        <img src="data:image/png;base64,@images[i]"/>
-                    </a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => boards[i].Cells.Count)
-                </td>
-                <td>
-                    <a asp-action="Load" asp-route-id="@boards[i].Id">Load</a> |
-                    <a asp-action="Edit" asp-route-id="@boards[i].Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@boards[i].Id">Delete</a>
-                </td>
-            </tr>
-        }
-        
+    @for (var i = 0; i < Math.Min(images.Count, boards.Count); i++)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => boards[i].Id)
+            </td>
+            <td>
+                <a asp-action="Load" asp-route-id="@boards[i].Id">
+                    @Html.DisplayFor(modelItem => boards[i].Name)
+                </a>
+            </td>
+            <td>
+                <a asp-action="Load" asp-route-id="@boards[i].Id">
+                    <img src="data:image/png;base64,@images[i]"/>
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => boards[i].Cells.Count)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@boards[i].Id">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@boards[i].Id">Delete</a>
+            </td>
+        </tr>
+    }
+
 
     </tbody>
 </table>
