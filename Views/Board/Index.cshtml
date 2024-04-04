@@ -1,7 +1,10 @@
 ﻿@model IEnumerable<MyWebApplication.Models.Board>
 
 @{
-    ViewData["Title"] = "Create Boards";
+    ViewData["Title"] = "View Boards";
+    // Convert Model to List
+    List<Board> boards = Model.ToList();
+    List<string> images = ViewData["BoardImages"] as List<string>;
 }
 
 <h1>Saved Boards</h1>
@@ -19,19 +22,24 @@
             @Html.DisplayNameFor(model => model.Name)
         </th>
         <th>
-            
+            Image
+        </th>
+        <th>
         </th>
     </tr>
     </thead>
     <tbody>
     @foreach (var item in Model) {
+    
         <tr>
-        
             <td>
                 @Html.DisplayFor(modelItem => item.Id)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                
             </td>
             <td>
                 <a asp-action="Load" asp-route-id="@item.Id">Load</a> |
@@ -41,6 +49,17 @@
             </td>
         </tr>
     }
+    
+    <div class="previewContainer">
+        @for(var i = 0; i < boards.Count; i++)
+        {
+            var item1 = boards[i];
+            var item2 = images[i];
+            // your code using itemModel1 and itemModel2
+            @item1.Name
+            <img src="data:image/png;base64,@item2" />
+        }
+    </div>
 
     </tbody>
 </table>

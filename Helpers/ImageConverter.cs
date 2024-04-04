@@ -123,11 +123,20 @@ namespace MyWebApplication.Models
 			// Create an image from the cells
 			using var image = new Image<Rgba32>(imgSize, imgSize);
 
-			foreach (var cell in cells)
+			for(int x = 0; x < image.Width; x++)
 			{
-				var x = cell.X;
-				var y = cell.Y;
-				image[x, y] = Rgba32.ParseHex(cell.Color);
+				for(int y = 0; y < image.Height; y++)
+				{
+					var cell = cells.FirstOrDefault(c => c.X == x && c.Y == y);
+					if(cell == null)
+					{
+						image[x, y] = Rgba32.ParseHex("#FFFFFF");
+					}
+					else
+					{
+						image[x, y] = Rgba32.ParseHex(cell.Color);
+					}
+				}
 			}
 			
 			// Convert the image to a byte array
@@ -136,7 +145,8 @@ namespace MyWebApplication.Models
 			byte[] imageData = outStream.ToArray();
 
 			// Convert the byte array to a base64 string
-			return Convert.ToBase64String(imageData);
+			string b64String =  Convert.ToBase64String(imageData);
+			return b64String;
 		}
 	}
 }

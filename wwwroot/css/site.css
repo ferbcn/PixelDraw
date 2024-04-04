@@ -136,3 +136,10 @@ input-container {
     margin-left: 25%;
     width: 50%;
 }
+
+.previewContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}

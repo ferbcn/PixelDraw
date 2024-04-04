@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyWebApplication.Data;
 using MyWebApplication.Models;
+using ImageConverter = MyWebApplication.Models.ImageConverter;
 
 namespace MyWebApplication.Controllers
 {
@@ -29,10 +24,19 @@ namespace MyWebApplication.Controllers
             }
             else
             {
-                var boards = await _context.Board.OrderByDescending(b => b.Id).ToListAsync();
+                List<Board> boards = await _context.Board.OrderByDescending(b => b.Id).ToListAsync();
                 //var boards = await _context.Board.Include(b => b.Cells).ToListAsync();
                 // Fetch all cells for each board and include in View
-                
+                var boardCellList = new List<List<Cell>>();
+                var boardIds = boards.Select(b => b.Id).ToList();
+                boardCellList = _context.Cell.Where(c => boardIds.Contains(c.BoardId)).GroupBy(c => c.BoardId).Select(g => g.ToList()).ToList();
+                List<string> b64ImageList = new List<string>();
+                foreach (var boardCells in boardCellList)
+                {
+                    b64ImageList.Add(ImageConverter.ConvertCellsToBase64Image(boardCells, 50));
+                }
+                // Include the base64 image strings in the ViewData
+                ViewData["BoardImages"] = b64ImageList;
                 return View(boards);
             }
         }
