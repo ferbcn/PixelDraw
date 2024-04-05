@@ -28,10 +28,24 @@ namespace MyWebApplication.Controllers
                 List<Board> boards = await _context.Board.OrderBy(b => b.Id).ToListAsync(); // Order by ID here
                 boards.Reverse();
                 // Fetch all cells for each board and include in View
-                var boardCellList = new List<List<Cell>>();
+                //var boardCellList = new List<List<Cell>>();
                 var boardIds = boards.Select(b => b.Id).ToList();
-                boardCellList = _context.Cell.Where(c => boardIds.Contains(c.BoardId)).OrderBy(c => c.BoardId).GroupBy(c => c.BoardId).Select(g => g.ToList()).ToList(); // Order by Board ID here
-                boardCellList.Reverse();
+                
+                // Get cells for all board IDs
+                var cellList = _context.Cell
+                    .Where(c => boardIds.Contains(c.BoardId))
+                    .OrderBy(c => c.BoardId)
+                    .ToList();
+
+                // Dictionary of boardId and corresponding cells
+                var cellDictionary = cellList
+                    .GroupBy(c => c.BoardId)
+                    .ToDictionary(g => g.Key, g => g.ToList());
+
+                // Ensure there is a list (even if it's empty)
+                var boardCellList = boardIds
+                    .Select(id => cellDictionary.TryGetValue(id, out var cells) ? cells : new List<Cell>())
+                    .ToList();
                 
                 // convert cells tom images
                 List<string> b64ImageList = new List<string>();

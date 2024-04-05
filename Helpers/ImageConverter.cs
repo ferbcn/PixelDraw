@@ -145,7 +145,7 @@ namespace MyWebApplication.Models
 			byte[] imageData = outStream.ToArray();
 
 			// Convert the byte array to a base64 string
-			string b64String =  Convert.ToBase64String(imageData);
+			string b64String = Convert.ToBase64String(imageData);
 			return b64String;
 		}
 	}

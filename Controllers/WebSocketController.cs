@@ -110,7 +110,7 @@ public class WebSocketController : Controller
             }
             Cell? currentCell = await _context.Cell.FirstOrDefaultAsync(c => c.X == j && c.Y == i && c.BoardId == boardId);
 
-            if (currentCell != null)
+            if (color == "#FFFFFF" && currentCell != null)
             {
                 _context.Remove(currentCell);
             }
@@ -123,14 +123,8 @@ public class WebSocketController : Controller
             await _context.SaveChangesAsync();
 
             string messageToSend;
-            if (currentCell != null)
-            {
-                messageToSend = $"{boardId}:{i}:{j}:{baseColor}";
-            }
-            else
-            {
-                messageToSend = $"{boardId}:{i}:{j}:{color}";
-            }
+            
+            messageToSend = $"{boardId}:{i}:{j}:{color}";
 
             var sendBuffer = Encoding.UTF8.GetBytes(messageToSend);
 

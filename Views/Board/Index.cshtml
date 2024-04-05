@@ -16,10 +16,7 @@
 </p>
 <table class="table">
     <thead>
-    <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Boards.First().Id)
-            </th>
+        <tr>
             <th>
                 Name
             </th>
@@ -38,9 +35,6 @@
     @for (var i = 0; i < Math.Min(images.Count, boards.Count); i++)
     {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => boards[i].Id)
-            </td>
             <td>
                 <a asp-action="Load" asp-route-id="@boards[i].Id">
                     @Html.DisplayFor(modelItem => boards[i].Name)
