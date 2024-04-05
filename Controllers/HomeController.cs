@@ -26,7 +26,7 @@ namespace MyWebApplication.Controllers
             Random random = new Random();
             int randomIndex = random.Next(0, allBoards.Count);
             var randomBoardId = allBoards[randomIndex].Id;
-            // Redirect to Board/Load?id=@randomBoardId 
+
             return RedirectToAction("Load", "Board", new { id = randomBoardId });
         }
         

@@ -34,12 +34,12 @@ namespace MyWebApplication.Controllers
 			string[,] bw_data_str = ImageConverter.ConvertToBwBitArray(data, threshold);
 			if (invert)
 			{
-				bw_data_str = InvertImage(bw_data_str, CONV_SIZE);
+				bw_data_str = InvertBitImage(bw_data_str, CONV_SIZE);
 			}
 			return bw_data_str;
 		}
 		
-		private string[,] InvertImage(string[,] imageData, Int16 imageSize)
+		private string[,] InvertBitImage(string[,] imageData, Int16 imageSize)
 		{
 			for(Int16 y = 0; y < imageSize; y++)
 			{
@@ -148,7 +148,9 @@ namespace MyWebApplication.Controllers
 			
 			// Create new board in DB
 			Board newBoard = new Board();
+			newBoard.Size = CONV_SIZE;
 			newBoard.Name = filename.Split(".")[0];
+			
 			_context.Add(newBoard);
 			await _context.SaveChangesAsync();
 			

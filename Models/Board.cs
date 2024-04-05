@@ -8,8 +8,12 @@ namespace MyWebApplication.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        
         public string Name { get; set; }
         
-        public List<Cell> Cells { get; set; } // Navigation property  
+        public int? Size { get; set; }
+        
+        public List<Cell> Cells { get; set; } // Navigation property
+        
     }
 }

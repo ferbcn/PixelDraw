@@ -1,18 +1,15 @@
 ﻿@model MyWebApplication.Models.BoardImageCellsViewModel
 
 @{
-    ViewData["Title"] = "View Boards";
     // Convert Model to List
     List<Board> boards = Model.Boards.ToList();
-    List<Cell> cells = Model.Cells.ToList();
     List<string> images = Model.b64Images.ToList();;
-    
 }
 
 <h1>Saved Boards</h1>
 
 <p>
-    <a asp-action="Create">Create Board</a>
+    <a asp-action="Create">@ViewData["Title"]</a>
 </p>
 <table class="table">
     <thead>
@@ -46,7 +43,7 @@
                 </a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => boards[i].Cells.Count)
+                @Html.DisplayFor(modelItem => boards[i].Size)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@boards[i].Id">Edit</a> |

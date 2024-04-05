@@ -61,6 +61,7 @@ namespace MyWebApplication.Controllers
                 boardImageCellsViewModel.Cells = _context.Cell.ToList();
                 boardImageCellsViewModel.b64Images = b64ImageList;
                 
+                ViewData["Title"] = "Saved Boards";
                 return View(boardImageCellsViewModel);
             }
         }
