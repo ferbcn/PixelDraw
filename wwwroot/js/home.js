@@ -174,8 +174,9 @@ function enterCell(hoverCell) {
         var j = cellId.split('/')[1];
         clickCell(i, j);
     }
-
-    hoverCell.style.backgroundColor = highColor;
+    else{
+        hoverCell.style.backgroundColor = highColor;
+    }
 }
 
 function leaveCell(hoverCell) {

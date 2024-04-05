@@ -13,13 +13,8 @@ public class WebSocketController : Controller
 {
     // all users need to access the _sockets list for broadcasating to other useres
     private static List<WebSocket> _sockets = new List<WebSocket>();
-
+    
     private MyWebApplicationContext _context;
-
-    private const String newColor = "#DD3333";
-    private const String baseColor = "#FFFFFF";
-
-    private static Random random = new();
 
     public WebSocketController(MyWebApplicationContext context)
     {
