@@ -141,7 +141,7 @@ namespace MyWebApplication.Models
 			
 			// Convert the image to a byte array
 			using var outStream = new MemoryStream();
-			image.SaveAsJpeg(outStream);
+			image.SaveAsPng(outStream);
 			byte[] imageData = outStream.ToArray();
 
 			// Convert the byte array to a base64 string

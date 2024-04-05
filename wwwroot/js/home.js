@@ -45,6 +45,12 @@ socket.onmessage = function (event) {
     prevColor = receivedColor; // avoid overwriting the new color on mouseleave
 };
 
+
+function pickColor(element) { 
+    mainColor = element.value;
+}
+
+
 /////////////////////////////////
 // EDIT Board Name dynamically //
 /////////////////////////////////
@@ -123,8 +129,7 @@ function clickCell (i, j) {
 };
 
 
-// Cell coloring and animations 
-
+// Cell coloring and animations
 window.onload = function () {
     console.log("Document loaded");
     document.querySelectorAll('.cell').forEach(cell => {
@@ -160,7 +165,7 @@ document.body.onmouseup = function() {
 
 function enterCell(hoverCell) {
     prevColor = hoverCell.style.backgroundColor;
-    prevColorHex = rgbToHex(hoverCell.style.backgroundColor);
+    //prevColorHex = rgbToHex(hoverCell.style.backgroundColor);
 
     // if the mouse is down and the color is not the same as the current color trigger click cell event for the current cell
     if (mouseDown && prevColor !== mainColor) {

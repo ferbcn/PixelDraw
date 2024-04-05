@@ -98,6 +98,8 @@ public class WebSocketController : Controller
             var receivedString = Encoding.UTF8.GetString(buffer, 0, receiveResult.Count);
             
             var parts = receivedString.Split(":");
+            string color = parts[3];
+            
             if (parts.Length < 3 ||
                 !int.TryParse(parts[0], out int boardId) ||
                 !int.TryParse(parts[1], out int i) ||
@@ -114,7 +116,7 @@ public class WebSocketController : Controller
             }
             else
             {
-                Cell newCell = new() { X = j, Y = i, Color = newColor, BoardId = boardId };
+                Cell newCell = new() { X = j, Y = i, Color = color, BoardId = boardId };
                 _context.Add(newCell);
             }
 
@@ -127,7 +129,7 @@ public class WebSocketController : Controller
             }
             else
             {
-                messageToSend = $"{boardId}:{i}:{j}:{newColor}";
+                messageToSend = $"{boardId}:{i}:{j}:{color}";
             }
 
             var sendBuffer = Encoding.UTF8.GetBytes(messageToSend);

@@ -30,8 +30,11 @@
     <div class="buttonContainer">
         <button class="btn btn-danger" hx-get="/Board/Reset?id=@boardId" hx-target="body" class="btn btn-primary">Reset</button>
         <!--<p>Socket state: <span id="stateLabel">Ready to connect...</span></p>-->
+        <div class="colorPickerContainer">    
+            Color: <input type="color" id="html5colorpicker" onchange="pickColor(this)" value="#DD3333">
+        </div>
     </div>
-
+    
 </div>
 
 <script src="~/js/home.js" asp-append-version="true"></script>

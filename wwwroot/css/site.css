@@ -143,3 +143,22 @@ input-container {
     justify-content: space-evenly;
     align-items: center;
 }
+
+.colorPickerContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 20vw;
+}
+
+.buttonContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn{
+    margin: 5px
+}

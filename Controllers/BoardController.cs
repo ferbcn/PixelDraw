@@ -26,12 +26,13 @@ namespace MyWebApplication.Controllers
             {
                 
                 List<Board> boards = await _context.Board.OrderBy(b => b.Id).ToListAsync(); // Order by ID here
-                // TDDO: Inverse Order by Id
-                
+                boards.Reverse();
                 // Fetch all cells for each board and include in View
                 var boardCellList = new List<List<Cell>>();
                 var boardIds = boards.Select(b => b.Id).ToList();
                 boardCellList = _context.Cell.Where(c => boardIds.Contains(c.BoardId)).OrderBy(c => c.BoardId).GroupBy(c => c.BoardId).Select(g => g.ToList()).ToList(); // Order by Board ID here
+                boardCellList.Reverse();
+                
                 // convert cells tom images
                 List<string> b64ImageList = new List<string>();
                 foreach (var boardCells in boardCellList)
