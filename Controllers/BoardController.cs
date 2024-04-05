@@ -8,6 +8,8 @@ namespace MyWebApplication.Controllers
 {
     public class BoardController : Controller
     {
+        const int DEFAULT_BOARD_SIZE = 50;
+        
         private readonly MyWebApplicationContext _context;
         
         public BoardController(MyWebApplicationContext context)
@@ -51,7 +53,7 @@ namespace MyWebApplication.Controllers
                 List<string> b64ImageList = new List<string>();
                 foreach (var boardCells in boardCellList)
                 {
-                    b64ImageList.Add(ImageConverter.ConvertCellsToBase64Image(boardCells, 50));
+                    b64ImageList.Add(ImageConverter.ConvertCellsToBase64Image(boardCells, DEFAULT_BOARD_SIZE));
                 }
                 // Include the base64 image strings in the ViewData
                 ViewData["BoardImages"] = b64ImageList;
@@ -89,6 +91,7 @@ namespace MyWebApplication.Controllers
         {
             // Create new board in DB
             Board newBoard = new Board();
+            newBoard.Size = DEFAULT_BOARD_SIZE;
             newBoard.Name = "NewBoard";
             _context.Add(newBoard);
             await _context.SaveChangesAsync();
@@ -151,7 +154,7 @@ namespace MyWebApplication.Controllers
             // read only Cells from provided BoardId in Db and apply to board
             // List<Cell> cells = _context.Cell.ToList();
             List<Cell> cells = _context.Cell.Where(c => c.BoardId == Board.Id).ToList();
-            Board_DTO myboard = new Board_DTO(50);
+            Board_DTO myboard = new Board_DTO(DEFAULT_BOARD_SIZE);
             
             foreach (var cell in cells)
             {
