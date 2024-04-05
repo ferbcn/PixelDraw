@@ -51,9 +51,12 @@ namespace MyWebApplication.Controllers
                 
                 // convert cells tom images
                 List<string> b64ImageList = new List<string>();
-                foreach (var boardCells in boardCellList)
+                //foreach (var boardCells in boardCellList)
+                //{ 
+                for(int i = 0; i < boardCellList.Count; i++)
                 {
-                    b64ImageList.Add(ImageConverter.ConvertCellsToBase64Image(boardCells, DEFAULT_BOARD_SIZE));
+                    int size = (int) boards[i].Size;
+                    b64ImageList.Add(ImageConverter.ConvertCellsToBase64Image(boardCellList[i], size));
                 }
                 // Include the base64 image strings in the ViewData
                 ViewData["BoardImages"] = b64ImageList;
@@ -110,7 +113,7 @@ namespace MyWebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] Board Board)
+        public async Task<IActionResult> Create([Bind("Name, Size")] Board Board)
         {
             //if (ModelState.IsValid)
             //{
@@ -146,6 +149,11 @@ namespace MyWebApplication.Controllers
             }
 
             var Board = await _context.Board.FindAsync(id);
+            int board_size = 50;
+            if (Board.Size != null)
+            {
+                board_size = (int) Board.Size;
+            }
             if (Board == null)
             {
                 return NotFound();
@@ -154,7 +162,7 @@ namespace MyWebApplication.Controllers
             // read only Cells from provided BoardId in Db and apply to board
             // List<Cell> cells = _context.Cell.ToList();
             List<Cell> cells = _context.Cell.Where(c => c.BoardId == Board.Id).ToList();
-            Board_DTO myboard = new Board_DTO(DEFAULT_BOARD_SIZE);
+            Board_DTO myboard = new Board_DTO(board_size);
             
             foreach (var cell in cells)
             {

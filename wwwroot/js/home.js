@@ -6,8 +6,8 @@ var port = document.location.port ? (":" + document.location.port) : "";
 var connectionUrl = scheme + "://" + document.location.hostname + port + "/wsclick";
 
 var mainColor = '#DD3333'; // red
-var baseColor = '#FFFFFF'; // white
-var highColor = '#AAAAAA'; // lightgrey
+// var baseColor = '#FFFFFF'; // white
+// var highColor = '#AAAAAA'; // lightgrey
 var prevColor; // to store the previous color of the cell when hovering over it
 
 // WebSockets connection and event handling
@@ -175,7 +175,7 @@ function enterCell(hoverCell) {
         clickCell(i, j);
     }
     else{
-        hoverCell.style.backgroundColor = highColor;
+        hoverCell.style.backgroundColor = mainColor;
     }
 }
 

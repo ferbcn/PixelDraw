@@ -9,7 +9,7 @@
 <h1>Saved Boards</h1>
 
 <p>
-    <a asp-action="Create">@ViewData["Title"]</a>
+    <a asp-action="Create">New Board</a>
 </p>
 <table class="table">
     <thead>
@@ -39,7 +39,9 @@
             </td>
             <td>
                 <a asp-action="Load" asp-route-id="@boards[i].Id">
-                    <img src="data:image/png;base64,@images[i]"/>
+                    <div class="imgPreviewContainer">
+                        <img class="imgPreview" src="data:image/png;base64,@images[i]"/>
+                    </div>
                 </a>
             </td>
             <td>

@@ -162,3 +162,14 @@ input-container {
 .btn{
     margin: 5px
 }
+
+.imgPreview{
+    max-width: 50px;
+}
+
+.imgPreviewContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
