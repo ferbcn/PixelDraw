@@ -149,11 +149,12 @@ namespace MyWebApplication.Controllers
             }
 
             var Board = await _context.Board.FindAsync(id);
-            int board_size = 50;
-            if (Board.Size != null)
+            int board_size = (int) Board.Size;
+            if (Board.Size == null || Board.Size == 0)
             {
-                board_size = (int) Board.Size;
+                board_size = 50;
             }
+            Console.WriteLine("Board Size: " + board_size);
             if (Board == null)
             {
                 return NotFound();
