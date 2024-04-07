@@ -168,7 +168,15 @@ function runCellularAutomata(){
 }
 
 function leaveCell(hoverCell) {
-    hoverCell.style.backgroundColor = prevColor;
+    if (mouseDown && prevColor !== mainColor) {
+        var cellId = hoverCell.id.split('_')[1];
+        var i = cellId.split('/')[0];
+        var j = cellId.split('/')[1];
+        clickCell(i, j);
+    }
+    else {
+        hoverCell.style.backgroundColor = prevColor;
+    }
     //transitionColor(hoverCell, highColor, rgbToHex(prevColor), 500);
 }
 

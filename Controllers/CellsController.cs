@@ -33,6 +33,24 @@ namespace MyWebApplication.Controllers
             return View(cells);
             
         }
+        
+        // GET: Cells/Board/5
+        public async Task<IActionResult> Board(int? id)
+        {
+            if (id == null || _context.Cell == null)
+            {
+                return NotFound();
+            }
+
+            var cells = await _context.Cell.Where(c => c.BoardId == id).ToListAsync();
+
+            if (cells == null)
+            {
+                return NotFound();
+            }
+
+            return View("Index", cells);
+        }
 
         // GET: Cells/Details/5
         public async Task<IActionResult> Details(int? id)
