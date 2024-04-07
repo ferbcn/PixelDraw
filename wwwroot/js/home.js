@@ -199,7 +199,7 @@ function enterCell(hoverCell) {
     //prevColorHex = rgbToHex(hoverCell.style.backgroundColor);
 
     // if the mouse is down and the color is not the same as the current color trigger click cell event for the current cell
-    if (mouseDown && prevColor !== mainColor) {
+    if (mouseDown) {
         var cellId = hoverCell.id.split('_')[1];
         var i = cellId.split('/')[0];
         var j = cellId.split('/')[1];
@@ -211,7 +211,15 @@ function enterCell(hoverCell) {
 }
 
 function leaveCell(hoverCell) {
-    hoverCell.style.backgroundColor = prevColor;
+    if (mouseDown) {
+        var cellId = hoverCell.id.split('_')[1];
+        var i = cellId.split('/')[0];
+        var j = cellId.split('/')[1];
+        clickCell(i, j);
+    }
+    else {
+        hoverCell.style.backgroundColor = prevColor;
+    }
     //transitionColor(hoverCell, highColor, rgbToHex(prevColor), 500);
 }
 
