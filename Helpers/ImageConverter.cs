@@ -13,13 +13,30 @@ namespace MyWebApplication.Models
 		{
 			using var inStream = new MemoryStream(imageData);
 			using var outStream = new MemoryStream();
-			
 			using (Image<Rgba32> image = Image.Load<Rgba32>(inStream)) 
 			{
+				// get width and height of image
+				int originalWidth = image.Width;
+				int originalHeight = image.Height;
+				
+				if (originalWidth > originalHeight)
+				{
+					// crop the image to original height by centering it (a.k. cutting on both sides equally)
+					var diff = originalWidth - originalHeight;
+					var offsetX = diff / 2;
+					image.Mutate(x => x.Crop(new Rectangle(offsetX, 0, originalHeight, originalHeight)));
+				}
+				else
+				{
+					// crop the image to original width
+					var diff = originalHeight - originalWidth;
+					var offsetY = diff / 2;
+					image.Mutate(x => x.Crop(new Rectangle(0, offsetY, originalWidth, originalWidth)));
+				}
+        
 				image.Mutate(x => x.Resize(width, height));
 				image.SaveAsJpeg(outStream);
 			}
-
 			return outStream.ToArray();
 		}
 		
@@ -65,6 +82,24 @@ namespace MyWebApplication.Models
 				}
 			}
 			return bitArray;
+		}
+		
+		public static string[,] ConvertToColorStringArray(byte[] imageData)
+		{
+			using var inStream = new MemoryStream(imageData);
+			using Image<Rgba32> image = Image.Load<Rgba32>(inStream);
+			string[,] hexArray = new string[image.Width, image.Height];
+
+			// Convert each pixel to HEX
+			for (int y = 0; y < image.Height; y++)
+			{
+				for (int x = 0; x < image.Width; x++)
+				{
+					Rgba32 pixelColor = image[y, x];
+					hexArray[x, y] = $"#{pixelColor.R:X2}{pixelColor.G:X2}{pixelColor.B:X2}";
+				}
+			}
+			return hexArray;
 		}
 
 		private static string[] ImageToStringArray(byte[] imageData)

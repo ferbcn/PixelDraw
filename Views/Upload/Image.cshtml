@@ -13,9 +13,6 @@
 		<div class="uploadedImage">
 			<img id="originalImage" src="@image_b64"/>
 		</div>
-		<div class="uploadedImage">
-			<img id="resizedImage" src="@image_b64_sm"/>
-		</div>
 	</div>
 	
 	<div id="mainBoard" class="mainBoard">
@@ -41,6 +38,13 @@
     				</div>
     				Invert:
     				<input type="checkbox" id="invert" name="invert" value="true" 
+    				       hx-post='/UpdateThreshold'
+    				       hx-target='#mainBoard'
+    				       hx-swap="outerHTML"
+    				       hx-include="#filename">
+    				
+    				To B&W:
+    				<input type="checkbox" id="toBw" name="toBw" value="true" 
     				       hx-post='/UpdateThreshold'
     				       hx-target='#mainBoard'
     				       hx-swap="outerHTML"

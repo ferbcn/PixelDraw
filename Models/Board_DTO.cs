@@ -14,12 +14,12 @@ namespace MyWebApplication.Models
             Console.WriteLine("New Board with Size: " + size);
         }
         
-        public Board_DTO(int size, string[,] bw_data_str)
+        public Board_DTO(int size, string[,] color_data_str)
         {
             // 2 dimensional array of points to represent the board 
             board = new String[size, size];
-            InitBoard(size, bw_data_str);
-            if (bw_data_str.GetLength(0) >= size || bw_data_str.GetLength(1) >= size)
+            InitBoard(size, color_data_str);
+            if (color_data_str.GetLength(0) >= size || color_data_str.GetLength(1) >= size)
             {
                 Console.WriteLine("Warning: Board size smaller than data size");
             }
@@ -43,8 +43,8 @@ namespace MyWebApplication.Models
             {
                 for (int x = 0; x < GetSize(); x++)
                 {
-                    var newColor = bw_data_str[y, x] == "1" ? "#DD3333" : "#FFFFFF";
-                    SetCell(x, y, newColor);
+                    // var newColor = bw_data_str[y, x] == "1" ? "#DD3333" : "#FFFFFF";
+                    SetCell(x, y, bw_data_str[y, x]);
                 }
             }	
         }
