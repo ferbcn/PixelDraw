@@ -94,7 +94,7 @@ namespace MyWebApplication.Controllers
 				ViewData["image_data"] = $"data:image/png;base64,{Convert.ToBase64String(img_data_raw)}";
 				
 				// resize image and convert to greyscale byte string array
-				byte[] img_data_small = ImageConverter.Resize(img_data_raw, CONV_SIZE, CONV_SIZE);
+				byte[] img_data_small = ImageConverter.Resize(img_data_raw, CONV_SIZE, CONV_SIZE, false);
 			
 				// convert to color string array
 				string[,] color_data_str = ImageConverter.ConvertToColorStringArray(img_data_small);
@@ -117,25 +117,24 @@ namespace MyWebApplication.Controllers
 		
 		[HttpPost]
 		[Route("UpdateThreshold")]
-		public async Task<IActionResult> UpdateThreshold(int threshold, string filename, bool invert, bool toBw)
+		public async Task<IActionResult> UpdateThreshold(int threshold, string filename, bool invert, bool toBw, bool cropImg)
 		{
 			// load image from temp.png
 			byte[] img_data_raw = System.IO.File.ReadAllBytes("Temp/" + filename);
 			
 			// resize image and convert to greyscale byte string array
-			byte[] img_data_small = ImageConverter.Resize(img_data_raw, CONV_SIZE, CONV_SIZE);
+			byte[] data = ImageConverter.Resize(img_data_raw, CONV_SIZE, CONV_SIZE, cropImg);
 			string[,] color_data_str;
 			
 			if (toBw)
 			{
-				byte[] data = ImageConverter.Resize(img_data_small, CONV_SIZE, CONV_SIZE);
 				data = ImageConverter.ConvertToGreyScale(data);
 				color_data_str = ImageToBitHexString(data, threshold, invert);
 			}
 			else
 			{
 				// convert to color string array
-				color_data_str = ImageConverter.ConvertToColorStringArray(img_data_small);
+				color_data_str = ImageConverter.ConvertToColorStringArray(data);
 			}
 			
 			// create board from reduced image
@@ -148,26 +147,25 @@ namespace MyWebApplication.Controllers
 		}
 		
 		[HttpPost]
-		public async Task<IActionResult> Save (int threshold, string filename, bool invert, bool toBw)
+		public async Task<IActionResult> Save (int threshold, string filename, bool invert, bool toBw, bool cropImg)
 		{
 			// Console.WriteLine("Save image: " + filename);
 			// load image from temp.png
 			byte[] img_data_raw = System.IO.File.ReadAllBytes("Temp/" + filename);
 			
 			// resize image and convert to greyscale byte string array
-			byte[] img_data_small = ImageConverter.Resize(img_data_raw, CONV_SIZE, CONV_SIZE);
+			byte[] data = ImageConverter.Resize(img_data_raw, CONV_SIZE, CONV_SIZE, cropImg);
 			string[,] color_data_str;
 			
 			if (toBw)
 			{
-				byte[]  data = ImageConverter.Resize(img_data_small, CONV_SIZE, CONV_SIZE);
 				data = ImageConverter.ConvertToGreyScale(data);
 				color_data_str = ImageToBitHexString(data, threshold, invert);
 			}
 			else
 			{
 				// convert to color string array
-				color_data_str = ImageConverter.ConvertToColorStringArray(img_data_small);
+				color_data_str = ImageConverter.ConvertToColorStringArray(data);
 			}
 
 			// create board from reduced image

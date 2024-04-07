@@ -9,8 +9,9 @@ namespace MyWebApplication.Models
 {
 	public static class ImageConverter
 	{
-		public static byte[] Resize(byte[] imageData, Int32 width, Int32 height)
+		public static byte[] Resize(byte[] imageData, Int32 width, Int32 height, bool cropImg)
 		{
+			
 			using var inStream = new MemoryStream(imageData);
 			using var outStream = new MemoryStream();
 			using (Image<Rgba32> image = Image.Load<Rgba32>(inStream)) 
@@ -19,21 +20,40 @@ namespace MyWebApplication.Models
 				int originalWidth = image.Width;
 				int originalHeight = image.Height;
 				
-				if (originalWidth > originalHeight)
+				if (!cropImg)
 				{
-					// crop the image to original height by centering it (a.k. cutting on both sides equally)
-					var diff = originalWidth - originalHeight;
-					var offsetX = diff / 2;
-					image.Mutate(x => x.Crop(new Rectangle(offsetX, 0, originalHeight, originalHeight)));
+					if (originalWidth > originalHeight)
+					{
+						// expand image to new height by adding white space on left and right
+						var padding = (originalWidth - originalHeight) / 2;
+						image.Mutate(x => x.Pad(originalHeight, originalHeight + 2 * padding, Color.White));
+					}
+					else
+					{
+						// expand image to new width by adding white space on top and bottom
+						var padding = (originalHeight - originalWidth) / 2;
+						image.Mutate(x => x.Pad(originalWidth, originalWidth + 2 * padding, Color.White));
+					}
 				}
 				else
 				{
-					// crop the image to original width
-					var diff = originalHeight - originalWidth;
-					var offsetY = diff / 2;
-					image.Mutate(x => x.Crop(new Rectangle(0, offsetY, originalWidth, originalWidth)));
+					if (originalWidth > originalHeight)
+					{
+						// crop the image to original height by centering it (a.k. cutting on both sides equally)
+						var diff = originalWidth - originalHeight;
+						var offsetX = diff / 2;
+						image.Mutate(x => x.Crop(new Rectangle(offsetX, 0, originalHeight, originalHeight)));
+					}
+					else
+					{
+						// crop the image to original width
+						var diff = originalHeight - originalWidth;
+						var offsetY = diff / 2;
+						image.Mutate(x => x.Crop(new Rectangle(0, offsetY, originalWidth, originalWidth)));
+					}
 				}
-        
+				
+				// resize image to final size
 				image.Mutate(x => x.Resize(width, height));
 				image.SaveAsJpeg(outStream);
 			}
