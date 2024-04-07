@@ -28,20 +28,23 @@
         }
     </div>
     <div class="buttonContainer">
-        <button class="btn btn-light" hx-get="/Board/Reset?id=@boardId" hx-target="body" class="btn btn-primary">
+        <button id="nuke-btn" class="btn btn-light">
             <i class="fa-solid fa-bomb"></i>
         </button>
         <!--<p>Socket state: <span id="stateLabel">Ready to connect...</span></p>-->
         <div class="colorPickerContainer">    
             Color: <input type="color" id="html5colorpicker" onchange="pickColor(this)" value="#DD3333">
         </div>
-        <i class="fa-solid fa-eraser"></i>
+        <button id="eraser-btn" class="btn btn-light">
+            <i class="fa-solid fa-eraser"></i>
+        </button>
     </div>
     
 </div>
 
-<script src="~/js/home.js" asp-append-version="true"></script>
 <script>
     var boardId = @boardId;
 </script>
+
+<script src="~/js/home.js" asp-append-version="true"></script>
 

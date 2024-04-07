@@ -93,8 +93,16 @@ public class WebSocketController : Controller
             var receivedString = Encoding.UTF8.GetString(buffer, 0, receiveResult.Count);
             
             var parts = receivedString.Split(":");
-            string color = parts[3];
-            
+            string color = "#ffffff";
+            try
+            {
+                color = parts[3];
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Exception: {e} , receivedString: {receivedString}");
+                continue;
+            }
             if (parts.Length < 3 ||
                 !int.TryParse(parts[0], out int boardId) ||
                 !int.TryParse(parts[1], out int i) ||
@@ -103,28 +111,35 @@ public class WebSocketController : Controller
                 // Malformed request, ignore and continue with the next iteration
                 continue;
             }
-            Cell? currentCell = await _context.Cell.FirstOrDefaultAsync(c => c.X == j && c.Y == i && c.BoardId == boardId);
-
-            if (color == "#FFFFFF" && currentCell != null)
+            if (color == "nuke")
             {
-                _context.Remove(currentCell);
+                List<Cell> cells = _context.Cell.Where(c => c.BoardId == boardId).ToList();
+                foreach (var cell in cells)
+                {
+                    _context.Remove(cell);
+                }
+                await _context.SaveChangesAsync();
             }
             else
             {
-                Cell newCell = new() { X = j, Y = i, Color = color, BoardId = boardId };
-                _context.Add(newCell);
+                Cell? currentCell = await _context.Cell.FirstOrDefaultAsync(c => c.X == j && c.Y == i && c.BoardId == boardId);
+                if (color == "#ffffff" && currentCell != null)
+                {
+                    _context.Remove(currentCell);
+                }
+                else
+                {
+                    Cell newCell = new() { X = j, Y = i, Color = color, BoardId = boardId };
+                    _context.Add(newCell);
+                }
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
-
             string messageToSend;
-            
             messageToSend = $"{boardId}:{i}:{j}:{color}";
-
-            var sendBuffer = Encoding.UTF8.GetBytes(messageToSend);
-
-
+            
             // After saving changes to the database, broadcast the message to all connected clients.
+            var sendBuffer = Encoding.UTF8.GetBytes(messageToSend);
             foreach (var socket in _sockets)
             {
                 if (socket.State == WebSocketState.Open)

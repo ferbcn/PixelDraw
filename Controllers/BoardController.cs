@@ -251,17 +251,6 @@ namespace MyWebApplication.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-      
-        //[HttpGet, ActionName("Reset")]
-        public async Task<IActionResult> Reset(int id)
-        {
-            List<Cell> cells = _context.Cell.Where(c => c.BoardId == id).ToList();
-
-            _context.Cell.RemoveRange(cells);
-            await _context.SaveChangesAsync();
-            // return RedirectToAction("Index", "Home");
-            return RedirectToAction("Load", "Board", new { id = id });
-        }
 
         private bool BoardExists(int id)
         {

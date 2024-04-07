@@ -5,14 +5,12 @@ var scheme = document.location.protocol === "https:" ? "wss" : "ws";
 var port = document.location.port ? (":" + document.location.port) : "";
 var connectionUrl = scheme + "://" + document.location.hostname + port + "/wsclick";
 
-var mainColor = '#DD3333'; // red
-// var baseColor = '#FFFFFF'; // white
-// var highColor = '#AAAAAA'; // lightgrey
+var mainColor = '#dd3333'; // red
 var prevColor; // to store the previous color of the cell when hovering over it
 
 // WebSockets connection and event handling
-
 // stateLabel.innerHTML = "Connecting...";
+console.log("Connecting to " + connectionUrl);
 socket = new WebSocket(connectionUrl);
 
 socket.onopen = function (event) {
@@ -40,6 +38,12 @@ socket.onmessage = function (event) {
     var i = cell[1];
     var j = cell[2];
     var receivedColor = cell[3];
+    if (receivedColor === "nuke") {
+        document.querySelectorAll('.cell').forEach(cell => {
+            cell.style.backgroundColor = '#ffffff';
+        });
+        return;
+    }
     var cell = document.getElementById('cell_' + i + "/" + j);
     cell.style.backgroundColor = receivedColor;
     prevColor = receivedColor; // avoid overwriting the new color on mouseleave
@@ -50,6 +54,30 @@ function pickColor(element) {
     mainColor = element.value;
 }
 
+var eraserOn = false;
+var eraserBtn = document.getElementById('eraser-btn');
+
+eraserBtn.addEventListener('click', function() {
+    eraserOn = !eraserOn;
+    if (eraserOn) {
+        mainColor = '#ffffff';
+        eraserBtn.classList.remove('btn-light');
+        eraserBtn.classList.add('btn-danger');
+    }
+    else {
+        mainColor = rgbToHex(prevColor);
+        eraserBtn.classList.remove('btn-danger');
+        eraserBtn.classList.add('btn-light');
+    }
+});
+
+var nukeBtn = document.getElementById('nuke-btn');
+
+nukeBtn.addEventListener('click', function() {
+    var data = boardId + ":-1:-1:" + "nuke";
+    socket.send(data);
+    console.log('Sending socket data ' + data);
+});
 
 /////////////////////////////////
 // EDIT Board Name dynamically //
