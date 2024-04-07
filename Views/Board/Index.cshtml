@@ -48,11 +48,11 @@
                 @Html.DisplayFor(modelItem => boards[i].Size)
             </td>
             <td>
-                <div class="imgPreviewContainer">
-                <a asp-action="Edit" asp-route-id="@boards[i].Id">
-                    <div class="small-btn"><i class="fa-solid fa-edit"></i></div></a>
-                <a asp-action="Delete" asp-route-id="@boards[i].Id">
-                    <div class="small-btn"><i class="fa-solid fa-trash"></i></div></a>
+                <div class="buttonsContainer">
+                    <a asp-action="Edit" asp-route-id="@boards[i].Id">  
+                        <button class="btn btn-light"><i class="fa-solid fa-edit"></i></button></a>
+                    <a asp-action="Delete" asp-route-id="@boards[i].Id">
+                        <button class="btn btn-light"><i class="fa-solid fa-trash"></i></button></a>
                 </div>
             </td>
         </tr>

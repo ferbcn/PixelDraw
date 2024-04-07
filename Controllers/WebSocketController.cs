@@ -123,14 +123,13 @@ public class WebSocketController : Controller
             else
             {
                 Cell? currentCell = await _context.Cell.FirstOrDefaultAsync(c => c.X == j && c.Y == i && c.BoardId == boardId);
-                if (color == "#ffffff" && currentCell != null)
-                {
-                    _context.Remove(currentCell);
+                if (currentCell == null){
+                    Cell newCell = new() { X = j, Y = i, Color = color, BoardId = boardId };
+                    _context.Add(newCell);
                 }
                 else
                 {
-                    Cell newCell = new() { X = j, Y = i, Color = color, BoardId = boardId };
-                    _context.Add(newCell);
+                    currentCell.Color = color;
                 }
                 await _context.SaveChangesAsync();
             }

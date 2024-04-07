@@ -49,9 +49,11 @@ socket.onmessage = function (event) {
     prevColor = receivedColor; // avoid overwriting the new color on mouseleave
 };
 
+var selectedColor;
 
 function pickColor(element) { 
-    mainColor = element.value;
+    selectedColor = element.value;
+    mainColor = selectedColor;
 }
 
 var eraserOn = false;
@@ -65,7 +67,7 @@ eraserBtn.addEventListener('click', function() {
         eraserBtn.classList.add('btn-danger');
     }
     else {
-        mainColor = rgbToHex(prevColor);
+        mainColor = selectedColor;
         eraserBtn.classList.remove('btn-danger');
         eraserBtn.classList.add('btn-light');
     }
@@ -103,6 +105,7 @@ document.getElementById('editInput').addEventListener('keydown', function(e) {
         var formData = new FormData();
         formData.append('Id', boardId);
         formData.append('Name', this.value);
+        formData.append('Size', boardSize);
         
         fetch(`Edit?id=${boardId}`, {
             method: 'POST',
