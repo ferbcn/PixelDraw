@@ -173,3 +173,8 @@ input-container {
     justify-content: flex-start;
     align-items: center;
 }
+
+.small-btn{
+    margin: 5px;
+    width: 25px;
+}

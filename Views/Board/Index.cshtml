@@ -48,8 +48,12 @@
                 @Html.DisplayFor(modelItem => boards[i].Size)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@boards[i].Id"><i class="fa-solid fa-edit" style="width: 20px"></i></a> |
-                <a asp-action="Delete" asp-route-id="@boards[i].Id"><i class="fa-solid fa-trash" style="width: 20px"></i></a>
+                <div class="imgPreviewContainer">
+                <a asp-action="Edit" asp-route-id="@boards[i].Id">
+                    <div class="small-btn"><i class="fa-solid fa-edit"></i></div></a>
+                <a asp-action="Delete" asp-route-id="@boards[i].Id">
+                    <div class="small-btn"><i class="fa-solid fa-trash"></i></div></a>
+                </div>
             </td>
         </tr>
     }
