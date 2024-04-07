@@ -1,5 +1,6 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -8,51 +9,48 @@ html {
   }
 }
 
+body{
+    scroll: none;
+}
+
 a{
     color: #6a6a6a;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-    height: 90vh;
 }
 
 .display-4 {
     font-size: 2vh;
 }
 
-.mainBoard {
-    padding: 10px;
+.mainBoardContainer {
+    padding: 5px;
+    width: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin-left: 100px;
-    margin-right: 100px;
+}
+
+.mainBoard {
+    
 }
 
 .row {
     margin: 0;
     display: flex;
+    flex-direction: row;
     flex-wrap: nowrap;
+    justify-content: center;
+
 }
 
 .cell {
     margin: -1px;
-    width: 2vw;
-    height: 2vw;
-    max-width: 20px;
-    max-height: 20px;
     border: 1px solid #808080;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     cursor: pointer;
+    height: min(20px, max(5px, min(2vh, 2vw)));
+    width: min(20px, max(5px, min(2vh, 2vw)));
+    flex-grow: 1;
 }
 
 .color-sample {
