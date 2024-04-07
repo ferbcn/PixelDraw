@@ -5,8 +5,11 @@ var scheme = document.location.protocol === "https:" ? "wss" : "ws";
 var port = document.location.port ? (":" + document.location.port) : "";
 var connectionUrl = scheme + "://" + document.location.hostname + port + "/wsclick";
 
-var mainColor = '#dd3333'; // red
+var mainColor = '#000000'; // red
 var prevColor; // to store the previous color of the cell when hovering over it
+var baseColor = '#ffffff'; // white
+// default BW color
+var selectedColor = '#000000';
 
 // WebSockets connection and event handling
 // stateLabel.innerHTML = "Connecting...";
@@ -40,7 +43,7 @@ socket.onmessage = function (event) {
     var receivedColor = cell[3];
     if (receivedColor === "nuke") {
         document.querySelectorAll('.cell').forEach(cell => {
-            cell.style.backgroundColor = '#ffffff';
+            cell.style.backgroundColor = baseColor;
         });
         return;
     }
@@ -48,8 +51,6 @@ socket.onmessage = function (event) {
     cell.style.backgroundColor = receivedColor;
     prevColor = receivedColor; // avoid overwriting the new color on mouseleave
 };
-
-var selectedColor;
 
 function pickColor(element) { 
     selectedColor = element.value;
@@ -62,7 +63,7 @@ var eraserBtn = document.getElementById('eraser-btn');
 eraserBtn.addEventListener('click', function() {
     eraserOn = !eraserOn;
     if (eraserOn) {
-        mainColor = '#ffffff';
+        mainColor = baseColor;
         eraserBtn.classList.remove('btn-light');
         eraserBtn.classList.add('btn-danger');
     }
@@ -170,6 +171,12 @@ window.onload = function () {
         cell.addEventListener('mouseleave', function () {
             leaveCell(this);
         });
+        cell.addEventListener('touchstart', function () {
+            enterCell(this);
+        });
+        cell.addEventListener('touchend', function () {
+            leaveCell(this);
+        });
     });
 }
 
@@ -188,15 +195,21 @@ function enterCell(hoverCell) {
 var mouseDown = 0;
 document.body.onmousedown = function() {
     mouseDown = 1;
-    
 }
 document.body.onmouseup = function() {
     mouseDown = 0;
 }
+document.body.ontouchstart = function() {
+    mouseDown = 1;
+}
+document.body.ontouchend = function() {
+    mouseDown = 1;
+}
+
+
 
 function enterCell(hoverCell) {
     prevColor = hoverCell.style.backgroundColor;
-    //prevColorHex = rgbToHex(hoverCell.style.backgroundColor);
 
     // if the mouse is down and the color is not the same as the current color trigger click cell event for the current cell
     if (mouseDown) {

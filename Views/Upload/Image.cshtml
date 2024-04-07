@@ -28,38 +28,37 @@
 	</div>
 	
 	<div class="uploadContainer">
-    				<div class="sliderContainer">
-    					Threshold: 
-    					<input id="threshold" name="threshold" type="range" min="1" max="100" value="50" 
-    					       hx-post='/UpdateThreshold'
-    					       hx-target='#mainBoard'
-    					       hx-swap="outerHTML"
-    					       hx-include="#filename">
-    				</div>
-    				Invert:
-    				<input type="checkbox" id="invert" name="invert" value="true" 
-    				       hx-post='/UpdateThreshold'
-    				       hx-target='#mainBoard'
-    				       hx-swap="outerHTML"
-    				       hx-include="#filename">
-    				
-    				To B&W:
-    				<input type="checkbox" id="toBw" name="toBw" value="true" 
-    				       hx-post='/UpdateThreshold'
-    				       hx-target='#mainBoard'
-    				       hx-swap="outerHTML"
-    				       hx-include="#filename">
-    				
-    				
-    				<div class="buttonContainer">
-    					<button id="saveBtn" class="btn btn-primary btn-success"
-    					        hx-encoding='multipart/form-data'
-    					        hx-post="/Upload/Save"
-    					        hx-target="body"
-    					        hx-include="#filename">
-    					Save
-    					</button>
-    				</div>
-    			</div>
+    	<div class="sliderContainer">
+    		To B&W:
+    		<input type="checkbox" id="toBw" name="toBw" value="true" 
+    		       hx-post='/UpdateThreshold'
+    		       hx-target='#mainBoard'
+    		       hx-swap="outerHTML"
+    		       hx-include="#filename">
+		    
+    		Threshold: 
+    		<input id="threshold" name="threshold" type="range" min="1" max="100" value="50" 
+    		       hx-post='/UpdateThreshold'
+    		       hx-target='#mainBoard'
+    		       hx-swap="outerHTML"
+    		       hx-include="#filename">
+    		Invert:
+    		<input type="checkbox" id="invert" name="invert" value="true" 
+    		       hx-post='/UpdateThreshold'
+    		       hx-target='#mainBoard'
+    		       hx-swap="outerHTML"
+    		       hx-include="#filename">
+    	</div>
+    	
+    	<div class="buttonContainer">
+    		<button id="saveBtn" class="btn btn-primary btn-success"
+    		        hx-encoding='multipart/form-data'
+    		        hx-post="/Upload/Save"
+    		        hx-target="body"
+    		        hx-include="#filename">
+    		Save
+    		</button>
+    	</div>
+    </div>
 	
 </div>
