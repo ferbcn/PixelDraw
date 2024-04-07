@@ -232,6 +232,36 @@ namespace MyWebApplication.Controllers
 
             return View(Board);
         }
+        
+        // GET: Boards/Export/5
+        public async Task<IActionResult> Export(int? id)
+        {
+            if (id == null || _context.Board == null)
+            {
+                return NotFound();
+            }
+
+            var Board = await _context.Board
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (Board == null)
+            {
+                return NotFound();
+            }
+            
+            // Read all cells for board 
+            List<Cell> allCells = _context.Cell.Where(c => c.BoardId == Board.Id).ToList();
+            
+            var imageData = ImageConverter.ConvertCellsToPng(allCells, (int) Board.Size);
+            
+            var cd = new System.Net.Mime.ContentDisposition
+            {
+                FileName = "Image.png",
+                Inline = false,  
+            };
+            Response.Headers.Add("Content-Disposition", cd.ToString());
+            
+            return File(imageData.ToArray(), "image/png");
+        }
 
         // POST: Boards/Delete/5
         [HttpPost, ActionName("Delete")]

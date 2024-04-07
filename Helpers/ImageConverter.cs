@@ -173,7 +173,7 @@ namespace MyWebApplication.Models
 			return outStream.ToArray();
 		}
 		
-		public static string ConvertCellsToBase64Image(List<Cell> cells, int imgSize)
+		public static string ConvertCellsToBase64Image(List<Cell> cells, int imgSize, string bgColor="#FFFFFF")
 		{
 			// Create an image from the cells
 			using var image = new Image<Rgba32>(imgSize, imgSize);
@@ -185,7 +185,7 @@ namespace MyWebApplication.Models
 					var cell = cells.FirstOrDefault(c => c.X == x && c.Y == y);
 					if(cell == null)
 					{
-						image[x, y] = Rgba32.ParseHex("#FFFFFF");
+						image[x, y] = Rgba32.ParseHex(bgColor);
 					}
 					else
 					{
@@ -202,6 +202,35 @@ namespace MyWebApplication.Models
 			// Convert the byte array to a base64 string
 			string b64String = Convert.ToBase64String(imageData);
 			return b64String;
+		}
+		
+		public static byte[] ConvertCellsToPng(List<Cell> cells, int imgSize, string bgColor="#FFFFFF")
+		{
+			// Create an image from the cells
+			using var image = new Image<Rgba32>(imgSize, imgSize);
+
+			for(int x = 0; x < image.Width; x++)
+			{
+				for(int y = 0; y < image.Height; y++)
+				{
+					var cell = cells.FirstOrDefault(c => c.X == x && c.Y == y);
+					if(cell == null)
+					{
+						image[x, y] = Rgba32.ParseHex(bgColor);
+					}
+					else
+					{
+						image[x, y] = Rgba32.ParseHex(cell.Color);
+					}
+				}
+			}
+			
+			// Convert the image to a byte array
+			using var outStream = new MemoryStream();
+			image.SaveAsPng(outStream);
+			byte[] imageData = outStream.ToArray();
+
+			return imageData;
 		}
 	}
 }
