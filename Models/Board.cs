@@ -11,7 +11,7 @@ namespace MyWebApplication.Models
         
         public string Name { get; set; }
         
-        public int? Size { get; set; }
+        public int Size { get; set; }
         
         public List<Cell> Cells { get; set; } // Navigation property
         

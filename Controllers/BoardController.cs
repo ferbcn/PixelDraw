@@ -150,11 +150,7 @@ namespace MyWebApplication.Controllers
 
             var Board = await _context.Board.FindAsync(id);
             int board_size = (int) Board.Size;
-            if (Board.Size == null || Board.Size == 0)
-            {
-                board_size = 50;
-            }
-            Console.WriteLine("Board Size: " + board_size);
+            Console.WriteLine("Loading board Size: " + board_size);
             if (Board == null)
             {
                 return NotFound();
@@ -183,7 +179,7 @@ namespace MyWebApplication.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         [HttpPost]
         // [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id, Name")] Board Board)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, Name, Size")] Board Board)
         {
             if (id != Board.Id)
             {

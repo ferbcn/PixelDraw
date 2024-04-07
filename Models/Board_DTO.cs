@@ -11,13 +11,18 @@ namespace MyWebApplication.Models
             // 2 dimensional array of points to represent the board 
             board = new String[size, size];
             InitBoard(size);
+            Console.WriteLine("New Board with Size: " + size);
         }
         
-        public Board_DTO(int size, string[,] board_str)
+        public Board_DTO(int size, string[,] bw_data_str)
         {
             // 2 dimensional array of points to represent the board 
             board = new String[size, size];
-            InitBoard(size, board_str);
+            InitBoard(size, bw_data_str);
+            if (bw_data_str.GetLength(0) >= size || bw_data_str.GetLength(1) >= size)
+            {
+                Console.WriteLine("Warning: Board size smaller than data size");
+            }
         }
 
         private void InitBoard(int size)
@@ -34,9 +39,9 @@ namespace MyWebApplication.Models
         private void InitBoard(int size, string[,] bw_data_str)
         {
             //Console.WriteLine("Length: " + bw_data_str.Length);
-            for (int y = 0; y < bw_data_str.GetLength(0); y++)
+            for (int y = 0; y < GetSize(); y++)
             {
-                for (int x = 0; x < bw_data_str.GetLength(1); x++)
+                for (int x = 0; x < GetSize(); x++)
                 {
                     var newColor = bw_data_str[y, x] == "1" ? "#DD3333" : "#FFFFFF";
                     SetCell(x, y, newColor);
@@ -51,7 +56,7 @@ namespace MyWebApplication.Models
         }
 
         // get board size
-        public int? GetSize()
+        public int GetSize()
         {
             return board.GetLength(0);
         }
@@ -59,7 +64,14 @@ namespace MyWebApplication.Models
         // set cell
         public void SetCell(int x, int y, String color)
         {
-            board[y, x] = color;
+            if (x >= 0 && x < GetSize() && y >= 0 && y < GetSize())
+            {
+                board[y, x] = color;
+            }
+            else
+            {
+                //Console.Write("Cells outside of board: " + x + ", " + y + "\n");
+            }
         }
 
         // get cell
