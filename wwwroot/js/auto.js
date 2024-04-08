@@ -229,3 +229,7 @@ function rgbToHex(rgb) {
     }
     return '#' + parts.join('');
 }
+
+document.getElementById('colorAutomata').addEventListener('change', function () {
+    mainColor = this.value;
+});

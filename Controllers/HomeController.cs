@@ -30,12 +30,12 @@ namespace MyWebApplication.Controllers
             return RedirectToAction("Load", "Board", new { id = randomBoardId });
         }
         
-        public async Task<IActionResult> Auto()
+        public async Task<IActionResult> Automata()
         {
             Board_DTO myboard = new Board_DTO(50);
             ViewData["Board"] = myboard.GetBoardString();
             ViewData["Size"] = myboard.GetSize();
-            ViewData["Title"] = "Automata";
+            ViewData["Title"] = "Cellular Automata";
             return View();
         }
         
