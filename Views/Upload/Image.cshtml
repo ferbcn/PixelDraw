@@ -44,7 +44,12 @@
     		       hx-target='#mainBoard'
     		       hx-swap="outerHTML"
     		       hx-include="#filename">
-		    
+		    Color:
+		    <input type="color" onchange="pickColor(this) "name="selectedColor" id="html5colorpicker" value="#000000"
+    		       hx-post='/UpdateThreshold'
+    		       hx-target='#mainBoard'
+    		       hx-swap="outerHTML"
+    		       hx-include="#filename">
     		Threshold: 
     		<input id="threshold" name="threshold" type="range" min="1" max="100" value="50" 
     		       hx-post='/UpdateThreshold'
@@ -71,3 +76,19 @@
     </div>
 	
 </div>
+
+<script>
+	/*
+	var colorPicker = document.getElementById('html5colorpicker');
+	var selectedColor = colorPicker.value;
+	
+	colorPicker.addEventListener('change', function() {
+		selectedColor = colorPicker.value;
+		console.log("Color changed to " + selectedColor);
+	});
+	*/
+	function pickColor(colorPicker) {
+		var selectedColor = colorPicker.value;
+		console.log("Color changed to " + selectedColor);
+	}
+</script>

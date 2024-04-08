@@ -30,7 +30,7 @@ namespace MyWebApplication.Controllers
 			return bw_data_str;
 		}
 		
-		private string[,] ImageToBitHexString(byte[] data, int threshold, bool invert=false)
+		private string[,] ImageToBitHexString(byte[] data, int threshold, bool invert, string color)
 		{	
 			string[,] bw_data_str = ImageConverter.ConvertToBwBitArray(data, threshold);
 			if (invert)
@@ -41,7 +41,7 @@ namespace MyWebApplication.Controllers
 			{
 				for (int x = 0; x < CONV_SIZE; x++)
 				{
-					bw_data_str[y, x] = bw_data_str[y, x] == "1" ? "#000000" : "#FFFFFF";
+					bw_data_str[y, x] = bw_data_str[y, x] == "1" ? color : "#FFFFFF";
 				}
 			}
 
@@ -117,7 +117,7 @@ namespace MyWebApplication.Controllers
 		
 		[HttpPost]
 		[Route("UpdateThreshold")]
-		public async Task<IActionResult> UpdateThreshold(int threshold, string filename, bool invert, bool toBw, bool cropImg)
+		public async Task<IActionResult> UpdateThreshold(int threshold, string filename, bool invert, bool toBw, bool cropImg, string selectedColor)
 		{
 			// load image from temp.png
 			byte[] img_data_raw = System.IO.File.ReadAllBytes("Temp/" + filename);
@@ -129,7 +129,7 @@ namespace MyWebApplication.Controllers
 			if (toBw)
 			{
 				data = ImageConverter.ConvertToGreyScale(data);
-				color_data_str = ImageToBitHexString(data, threshold, invert);
+				color_data_str = ImageToBitHexString(data, threshold, invert, selectedColor);
 			}
 			else
 			{
@@ -147,7 +147,7 @@ namespace MyWebApplication.Controllers
 		}
 		
 		[HttpPost]
-		public async Task<IActionResult> Save (int threshold, string filename, bool invert, bool toBw, bool cropImg)
+		public async Task<IActionResult> Save (int threshold, string filename, bool invert, bool toBw, bool cropImg, string selectedColor)
 		{
 			// Console.WriteLine("Save image: " + filename);
 			// load image from temp.png
@@ -160,7 +160,7 @@ namespace MyWebApplication.Controllers
 			if (toBw)
 			{
 				data = ImageConverter.ConvertToGreyScale(data);
-				color_data_str = ImageToBitHexString(data, threshold, invert);
+				color_data_str = ImageToBitHexString(data, threshold, invert, selectedColor);
 			}
 			else
 			{

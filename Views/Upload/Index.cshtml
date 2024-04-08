@@ -29,14 +29,12 @@
 </div>
 
 <script>
+	// Progress bar for file upload
 	htmx.on('#form', 'htmx:xhr:progress', function (evt) {
 		htmx.find('#progress').setAttribute('value', evt.detail.loaded / evt.detail.total * 100)
 	});
-</script>
 
-
-<script>
-	// Needed to include the filename as htmx paylooad (WIP)
+	// Needed to include the filename as htmx paylooad
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('formFile').addEventListener('change', function(e) {
             var fileName = e.target.value.split('\\').pop();
