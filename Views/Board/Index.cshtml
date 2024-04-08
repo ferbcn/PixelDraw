@@ -1,77 +1,23 @@
 ﻿@model MyWebApplication.Models.BoardImageCellsViewModel
 
-@{
-    // Convert Model to List
-    List<Board> boards = Model.Boards.ToList();
-    List<string> images = Model.b64Images.ToList();;
-    int linkCount = ViewData["Links"] as int? ?? 0;
-}
+
+<script src="~/lib/htmx/htmx.min.js"></script>
 
 <h1>Saved Boards</h1>
 
 <p>
     <a asp-action="Create">New Board</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Preview
-            </th>
-            <th>
-                Size
-            </th>
-            <th>
-                
-            </th>
-        </tr>   
-    </thead>
-    <tbody>
-    @for (var i = 0; i < Math.Min(images.Count, boards.Count); i++)
-    {
-        <tr>
-            <td>
-                <a asp-action="Load" asp-route-id="@boards[i].Id">
-                    @Html.DisplayFor(modelItem => boards[i].Name)
-                </a>
-            </td>
-            <td>
-                <a asp-action="Load" asp-route-id="@boards[i].Id">
-                    <div class="imgPreviewContainer">
-                        <img class="imgPreview" src="data:image/png;base64,@images[i]"/>
-                    </div>
-                </a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => boards[i].Size)
-            </td>
-            <td>
-                <div class="buttonsContainer">
-                    <a asp-action="Edit" asp-route-id="@boards[i].Id">  
-                        <button class="btn btn-light"><i class="fa-solid fa-edit"></i></button></a>
-                    <a asp-action="Delete" asp-route-id="@boards[i].Id">
-                        <button class="btn btn-light"><i class="fa-solid fa-trash"></i></button></a>
-                </div>
-            </td>
-        </tr>
-    }
 
-    </tbody>
-</table>
-
-
-<div class="linkContainer">
-    More: 
-    @for (var i = 10; i < linkCount+10; i+=10)
-    {
-        var offset = i - 10;
-        <a asp-action="List" asp-route-offset="@offset">
-            <div class="pageLink">
-                @i
-            </div>
-        </a>
-    }
+<div class="table" id="boardTable">
+        
 </div>
+
+    
+<button id="more-link" class="btn btn-light moreLink"
+        hx-post="/Board/More?offset=0"
+        hx-trigger="revealed"
+        hx-swap="beforeend"
+        hx-target="#boardTable" hidden>
+</button>
+

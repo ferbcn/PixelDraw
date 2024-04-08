@@ -268,7 +268,7 @@ function runCellularAutomata(){
     for (let color in colorCount) {
         let colorBar = document.createElement("div");
         colorBar.style.width = barWidth + "%";
-        colorBar.style.height = colorCount[color] + "%";
+        colorBar.style.height = colorCount[color]*2 + "%"; // scale the height as the board will never fill above 50%
         colorBar.style.backgroundColor = color;
         colorBar.innerHTML = colorCount[color] + "%";
         colorBars.appendChild(colorBar);

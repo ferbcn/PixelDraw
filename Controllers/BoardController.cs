@@ -20,22 +20,26 @@ namespace MyWebApplication.Controllers
         // GET: Boards
         public async Task<IActionResult> Index()
         {
-            return RedirectToAction("List", new { offset = 0 });
+            ViewData["Title"] = "Saved Boards";
+            return View("Index");
         }
 
-        // GET: Boards/List/5
-        public async Task<IActionResult> List(int offset)
+        // GET: Boards/More/5
+        public async Task<IActionResult> More(int offset)
         {
             if (_context.Board == null)
             {
                 return Problem("Entity set 'MyWebApplicationContext.Board' is null.");
             }
-            List<Board> boards = await _context.Board.OrderByDescending(b => b.Id).Skip(offset).Take(10).ToListAsync(); // Order by ID here
+
+            List<Board> boards =
+                await _context.Board.OrderByDescending(b => b.Id).Skip(offset).Take(10)
+                    .ToListAsync(); // Order by ID here
             int boardCount = _context.Board.Count();
-            
+
             // Fetch all cells for each board and include in View
             var boardIds = boards.Select(b => b.Id).ToList();
-            
+
             // Get cells for all board IDs
             var cellList = _context.Cell
                 .Where(c => boardIds.Contains(c.BoardId))
@@ -51,29 +55,39 @@ namespace MyWebApplication.Controllers
             var boardCellList = boardIds
                 .Select(id => cellDictionary.TryGetValue(id, out var cells) ? cells : new List<Cell>())
                 .ToList();
-            
+
             // convert cells tom images
             List<string> b64ImageList = new List<string>();
             //foreach (var boardCells in boardCellList)
             //{ 
-            for(int i = 0; i < boardCellList.Count; i++)
+            for (int i = 0; i < boardCellList.Count; i++)
             {
-                int size = (int) boards[i].Size;
+                int size = (int)boards[i].Size;
                 b64ImageList.Add(ImageConverter.ConvertCellsToBase64Image(boardCellList[i], size));
             }
+
             // Include the base64 image strings in the ViewData
             ViewData["BoardImages"] = b64ImageList;
-            
+
             BoardImageCellsViewModel boardImageCellsViewModel = new BoardImageCellsViewModel();
             boardImageCellsViewModel.Boards = boards;
-            boardImageCellsViewModel.Cells = _context.Cell.ToList();
             boardImageCellsViewModel.b64Images = b64ImageList;
-            
-            ViewData["Title"] = "Saved Boards";
-            ViewData["Links"] = boardCount;
-            return View("Index", boardImageCellsViewModel);
-        }
 
+            ViewData["newOffset"] = offset + 10;
+
+            if (offset > boardCount)
+            {
+                ViewData["Title"] = "No more boards";
+                ViewData["boardsAvailable"] = false;
+            }
+            else
+            {
+                ViewData["Title"] = "Saved Boards";
+                ViewData["boardsAvailable"] = true;
+            }
+            return View("LoadBoard", boardImageCellsViewModel);
+        }
+        
         // GET: Boards/Details/5
         public async Task<IActionResult> Details(int? id)
         {
