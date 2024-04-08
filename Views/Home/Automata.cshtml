@@ -1,6 +1,6 @@
 ﻿@{
     var board = ViewData["Board"] as String[,];
-    var boardSize = (int?) ViewData["Size"];
+    var boardSize = (int) ViewData["Size"];
 }
 
 @model IEnumerable<MyWebApplication.Models.Cell>
@@ -26,7 +26,7 @@
         Generations:<div id="genCount"></div>
     </div>
     <div class="buttonContainer">
-        <input type="color" id="colorAutomata"></input>
+        <input type="color" id="colorAutomata" value="#DD3333">
         <button id="btnReset" class="btn btn-light" class="btn btn-primary">&#8634;</button>
         <button id="btnStart" class="btn btn-light" class="btn btn-primary">&#9205;</button>
         <button id="btnMinus" class="btn btn-light" class="btn btn-primary">&#10134;</button>
@@ -36,3 +36,7 @@
 </div>
 
 <script src="~/js/auto.js" asp-append-version="true"></script>
+
+<script>
+    var boardSize = @boardSize;
+</script>

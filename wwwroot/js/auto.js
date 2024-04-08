@@ -12,6 +12,16 @@ var animationInterval;
 var genCount = 0;
 var genCountElement = document.getElementById("genCount");
 
+// Mouse and touch control variables
+var mouseDown = false;
+var touchActive = false;
+
+// Cells in the drawing board
+var allCells = document.querySelectorAll('.cell');
+
+// disable touch scrolling (for drawing on mobile)
+document.body.setAttribute("style","touch-action: none;");
+
 function clickCell (i, j) {
     // get color of the cell
     let currentColor = grid[i][j];
@@ -34,13 +44,14 @@ function clickCell (i, j) {
     
     // keep track of the color of the cell in the server
     grid[i][j] = currentColor;
-};
-
+}
 
 // Cell coloring and animations
+
+// Cell Enter / Cell leave
 window.onload = function () {
     console.log("Document loaded");
-    document.querySelectorAll('.cell').forEach(cell => {
+    allCells.forEach(cell => {
         cell.addEventListener('mouseenter', function () {
             enterCell(this);
         });
@@ -50,14 +61,56 @@ window.onload = function () {
     });
 }
 
+document.body.addEventListener('mousedown', function(){
+    mouseDown = true;
+});
 
-var mouseDown = 0;
-document.body.onmousedown = function() {
-    mouseDown = 1;
+document.body.addEventListener('mouseup', function(){
+    mouseDown = false;
+});
+
+document.body.addEventListener('touchstart', function(event){
+    touchActive = true;
+    console.log("Touch start");
+});
+
+document.body.addEventListener('touchend', function(){
+    touchActive = false;
+    console.log("Touch end");
+});
+
+document.body.addEventListener('touchmove', function(event){
+    if (!touchActive) return;
+    event.preventDefault();  // prevent scrolling page when touch is active
+    touchHandler(event);
+});
+
+function touchHandler(event) {
+    var touches = event.changedTouches;
+
+    for(var i=0; i < event.changedTouches.length; i++) {
+        var touchId = event.changedTouches[i].identifier;
+        var touchPosX       = event.changedTouches[i].pageX;
+        var touchPosY       = event.changedTouches[i].pageY;
+    }
+    console.log("Touch start: " + touchPosX + " / " +  touchPosY);
+
+    let cellElement = document.querySelector('.cell'); // change .cellClassName to your actual class or id 
+    let cellWidth = cellElement.offsetWidth - 2.4;
+    let cellHeight = cellElement.offsetHeight - 2.4;
+    let xOffset = cellElement.getBoundingClientRect().x;
+    let yOffset = cellElement.getBoundingClientRect().y;
+    let cellX = Math.floor((touchPosX - xOffset) / cellWidth);
+    let cellY = Math.floor((touchPosY - yOffset) / cellHeight);
+
+    // Get the Cell ID associated with touch x/y position
+    console.log("Cell ID: " + cellX + " / " +  cellY);
+
+    if (cellX >= 0 && cellX < boardSize && cellY >= 0 && cellY < boardSize){
+        clickCell(cellY, cellX);
+    }
 }
-document.body.onmouseup = function() {
-    mouseDown = 0;
-}
+
 
 function enterCell(hoverCell) {
     prevColor = hoverCell.style.backgroundColor;
@@ -70,8 +123,22 @@ function enterCell(hoverCell) {
         var j = cellId.split('/')[1];
         clickCell(i, j);
     }
+    else {
+        hoverCell.style.backgroundColor = highColor;
+    }
+}
 
-    hoverCell.style.backgroundColor = highColor;
+
+function leaveCell(hoverCell) {
+    if (mouseDown && prevColor !== mainColor) {
+        var cellId = hoverCell.id.split('_')[1];
+        var i = cellId.split('/')[0];
+        var j = cellId.split('/')[1];
+        clickCell(i, j);
+    }
+    else {
+        hoverCell.style.backgroundColor = prevColor;
+    }
 }
 
 
@@ -165,42 +232,6 @@ function runCellularAutomata(){
             }
         }
     }
-}
-
-function leaveCell(hoverCell) {
-    if (mouseDown && prevColor !== mainColor) {
-        var cellId = hoverCell.id.split('_')[1];
-        var i = cellId.split('/')[0];
-        var j = cellId.split('/')[1];
-        clickCell(i, j);
-    }
-    else {
-        hoverCell.style.backgroundColor = prevColor;
-    }
-    //transitionColor(hoverCell, highColor, rgbToHex(prevColor), 500);
-}
-
-function transitionColor(element, startColor, endColor, duration) {
-    var startTime = new Date().getTime();
-    var endColorRGB = hexToRgb(endColor);
-    var startColorRGB = hexToRgb(startColor);
-
-    var timer = setInterval(function () {
-        var now = new Date().getTime();
-        var elapsedTime = now - startTime;
-        var fraction = elapsedTime / duration;
-
-        if (fraction >= 1) {
-            clearInterval(timer);
-            fraction = 1;
-        }
-
-        var currentColor = 'rgb(' +
-            (Math.round(startColorRGB.r + (endColorRGB.r - startColorRGB.r) * fraction)) + ',' +
-            (Math.round(startColorRGB.g + (endColorRGB.g - startColorRGB.g) * fraction)) + ',' +
-            (Math.round(startColorRGB.b + (endColorRGB.b - startColorRGB.b) * fraction)) + ')';
-        element.style.backgroundColor = currentColor;
-    }, 25);
 }
 
 function hexToRgb(hex) {
