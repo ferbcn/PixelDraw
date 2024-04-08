@@ -11,7 +11,7 @@ namespace MyWebApplication.Models
             // 2 dimensional array of points to represent the board 
             board = new String[size, size];
             InitBoard(size);
-            Console.WriteLine("New Board with Size: " + size);
+            //Console.WriteLine("New Board with Size: " + size);
         }
         
         public Board_DTO(int size, string[,] color_data_str)
@@ -21,7 +21,7 @@ namespace MyWebApplication.Models
             InitBoard(size, color_data_str);
             if (color_data_str.GetLength(0) >= size || color_data_str.GetLength(1) >= size)
             {
-                Console.WriteLine("Warning: Board size smaller than data size");
+                //Console.WriteLine("Warning: Board size smaller than data size");
             }
         }
 

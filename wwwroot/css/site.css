@@ -218,3 +218,11 @@ input-container {
 .genCount{
     margin: 5px;
 }
+
+#colorBarContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: flex-end;
+    height: 5vh;
+}

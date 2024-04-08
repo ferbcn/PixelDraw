@@ -205,36 +205,73 @@ function runCellularAutomata(){
         for (let j = 0; j < grid[i].length; j++) {
             let cell = document.getElementById('cell_' + i + "/" + j);
             let currentColor = grid[i][j];
-            let groupColor = mainColor;
-            if (currentColor !== '#FFFFFF') {
-                groupColor = currentColor;
-            }
             let neighbors = 0;
+            let neighborsColor = [];
             // Count neighbors
             for (let x = -1; x < 2; x++) {
                 for (let y = -1; y < 2; y++) {
                     if (i + x >= 0 && i + x < grid.length && j + y >= 0 && j + y < grid[i].length) {
-                        if (grid[i + x][j + y] !== '#FFFFFF') {
+                        if (grid[i + x][j + y] !== baseColor) {
                             neighbors++;
+                            neighborsColor.push(grid[i + x][j + y]);
                         }
                     }
                 }
             }
+            // Select top color for growing new Cells
+            let topColor = neighborsColor.length > 0
+                ? neighborsColor.reduce((a, b) => neighborsColor.filter(v => v === a).length >= neighborsColor.filter(v => v === b).length ? a : b)
+                : mainColor;  // Replace defaultColor with the color you want to use in case of no neighbors
+            
             // Apply rules
-            if (currentColor !== '#FFFFFF') {
+            // If Cell is living and has 3 neighbours, kill it
+            if (currentColor !== baseColor) {
                 if (neighbors < 2 || neighbors > 3) {
                     grid[i][j] = baseColor;
                 }
+            // If Cell is dead and has correct number of neighbours, bring to life
             } else {
                 if (neighbors === 3) {
-                    grid[i][j] = groupColor;
+                    grid[i][j] = topColor;
                 }
             }
             // Update cell color
             if (currentColor !== grid[i][j]) {
                 cell.style.backgroundColor = grid[i][j];
             }
+            
         }
+    }
+    // Count all the colors present in the grid and calculate its percentage
+    var colorCount = {};
+    for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid[i].length; j++) {
+            if (grid[i][j] === baseColor) continue;
+            if (grid[i][j] in colorCount) {
+                colorCount[grid[i][j]]++;
+            } else {
+                colorCount[grid[i][j]] = 1;
+            }
+        }
+    }
+    // Convert each cell to a percentage base = 2500 cells
+    for (let color in colorCount) {
+        // trim the percentage to 1 decimal places
+        colorCount[color] = (colorCount[color] / 2500 * 100).toFixed(1);
+    }
+    
+    // display the values as bar graphs in the browser
+    var colorBars = document.getElementById("colorBarContainer");
+    // add the color bars to the container
+    colorBars.innerHTML = "";
+    let barWidth = 80 / Object.keys(colorCount).length;
+    for (let color in colorCount) {
+        let colorBar = document.createElement("div");
+        colorBar.style.width = barWidth + "%";
+        colorBar.style.height = colorCount[color] + "%";
+        colorBar.style.backgroundColor = color;
+        colorBar.innerHTML = colorCount[color] + "%";
+        colorBars.appendChild(colorBar);
     }
 }
 
