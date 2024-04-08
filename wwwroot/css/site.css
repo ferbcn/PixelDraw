@@ -207,3 +207,14 @@ input-container {
 
 .pageLink{
 }
+
+.genCountContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.genCount{
+    margin: 5px;
+}

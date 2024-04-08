@@ -93,7 +93,7 @@ function touchHandler(event) {
         var touchPosX       = event.changedTouches[i].pageX;
         var touchPosY       = event.changedTouches[i].pageY;
     }
-    console.log("Touch start: " + touchPosX + " / " +  touchPosY);
+    // console.log("Touch start: " + touchPosX + " / " +  touchPosY);
 
     let cellElement = document.querySelector('.cell'); // change .cellClassName to your actual class or id 
     let cellWidth = cellElement.offsetWidth - 2.4;
@@ -104,7 +104,7 @@ function touchHandler(event) {
     let cellY = Math.floor((touchPosY - yOffset) / cellHeight);
 
     // Get the Cell ID associated with touch x/y position
-    console.log("Cell ID: " + cellX + " / " +  cellY);
+    // console.log("Cell ID: " + cellX + " / " +  cellY);
 
     if (cellX >= 0 && cellX < boardSize && cellY >= 0 && cellY < boardSize){
         clickCell(cellY, cellX);
@@ -205,25 +205,29 @@ function runCellularAutomata(){
         for (let j = 0; j < grid[i].length; j++) {
             let cell = document.getElementById('cell_' + i + "/" + j);
             let currentColor = grid[i][j];
+            let groupColor = mainColor;
+            if (currentColor !== '#FFFFFF') {
+                groupColor = currentColor;
+            }
             let neighbors = 0;
             // Count neighbors
             for (let x = -1; x < 2; x++) {
                 for (let y = -1; y < 2; y++) {
                     if (i + x >= 0 && i + x < grid.length && j + y >= 0 && j + y < grid[i].length) {
-                        if (grid[i + x][j + y] === mainColor) {
+                        if (grid[i + x][j + y] !== '#FFFFFF') {
                             neighbors++;
                         }
                     }
                 }
             }
             // Apply rules
-            if (currentColor === mainColor) {
+            if (currentColor !== '#FFFFFF') {
                 if (neighbors < 2 || neighbors > 3) {
                     grid[i][j] = baseColor;
                 }
             } else {
                 if (neighbors === 3) {
-                    grid[i][j] = mainColor;
+                    grid[i][j] = groupColor;
                 }
             }
             // Update cell color

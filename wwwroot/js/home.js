@@ -151,7 +151,7 @@ document.body.addEventListener('touchend', function(){
 
 document.body.addEventListener('touchmove', function(event){
     if (!touchActive) return;
-    event.preventDefault();  // prevent scrolling page when touch is active
+    // event.preventDefault();  // prevent scrolling page when touch is active
     touchHandler(event);
 });
 

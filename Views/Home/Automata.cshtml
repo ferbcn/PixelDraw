@@ -10,20 +10,22 @@
 <div class="text-center">
     <h3 class="display-4">Cellular Automata &#128125;</h3>
     <p></p>
-    <div class="mainBoard">
-        @for (int i = 0; i < boardSize; i++)
-        {
-            <div class="row">
-                @for (int j = 0; j < boardSize; j++)
-                {
-                    <div onclick="clickCell(@i,@j)" id="cell_@i/@j" class="cell" style="background: @board?[i, j]"></div>
-                }
-            </div>
+    <div class="mainBoardContainer">
+        <div class="mainBoard">
+            @for (int i = 0; i < boardSize; i++)
+            {
+                <div class="row">
+                    @for (int j = 0; j < boardSize; j++)
+                    {
+                        <div onclick="clickCell(@i,@j)" id="cell_@i/@j" class="cell" style="background: @board?[i, j]"></div>
+                    }
+                </div>
 
-        }
+            }
+        </div>
     </div>
     <div class="genCountContainer">
-        Generations:<div id="genCount"></div>
+        Generations:&nbsp; <div id="genCount">0</div>
     </div>
     <div class="buttonContainer">
         <input type="color" id="colorAutomata" value="#DD3333">
