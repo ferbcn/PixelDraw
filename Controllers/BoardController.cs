@@ -20,6 +20,12 @@ namespace MyWebApplication.Controllers
         // GET: Boards
         public async Task<IActionResult> Index()
         {
+            return RedirectToAction("List", new { offset = 0 });
+        }
+
+        // GET: Boards/All/5
+        public async Task<IActionResult> List(int offset)
+        {
             if (_context.Board == null)
             {
                 return Problem("Entity set 'MyWebApplicationContext.Board'  is null.");
@@ -27,10 +33,9 @@ namespace MyWebApplication.Controllers
             else
             {
                 
-                List<Board> boards = await _context.Board.OrderBy(b => b.Id).ToListAsync(); // Order by ID here
-                boards.Reverse();
+                List<Board> boards = await _context.Board.OrderByDescending(b => b.Id).Skip(offset).ToListAsync(); // Order by ID here
+                
                 // Fetch all cells for each board and include in View
-                //var boardCellList = new List<List<Cell>>();
                 var boardIds = boards.Select(b => b.Id).ToList();
                 
                 // Get cells for all board IDs
@@ -67,7 +72,7 @@ namespace MyWebApplication.Controllers
                 boardImageCellsViewModel.b64Images = b64ImageList;
                 
                 ViewData["Title"] = "Saved Boards";
-                return View(boardImageCellsViewModel);
+                return View("Index", boardImageCellsViewModel);
             }
         }
 
