@@ -15,13 +15,6 @@
 		</div>
 	</div>
 	
-	Crop:
-    <input type="checkbox" id="cropImg" name="cropImg" value="true" 
-           hx-post='/UpdateThreshold'
-           hx-target='#mainBoard'
-           hx-swap="outerHTML"
-           hx-include="#filename">
-    		    
 	<div class="mainBoardContainer">
 		<div id="mainBoard" class="mainBoard">
 			@for (int i = 0; i < boardSize; i++)
@@ -35,46 +28,55 @@
 			}
 		</div>
 	</div>
-	
-	<div class="uploadContainer">
-    	<div class="sliderContainer">
-    		To B&W:
-    		<input type="checkbox" id="toBw" name="toBw" value="true" 
-    		       hx-post='/UpdateThreshold'
-    		       hx-target='#mainBoard'
-    		       hx-swap="outerHTML"
-    		       hx-include="#filename">
-		    Color:
-		    <input type="color" onchange="pickColor(this) "name="selectedColor" id="html5colorpicker" value="#000000"
-    		       hx-post='/UpdateThreshold'
-    		       hx-target='#mainBoard'
-    		       hx-swap="outerHTML"
-    		       hx-include="#filename">
-    		Threshold: 
-    		<input id="threshold" name="threshold" type="range" min="1" max="100" value="50" 
-    		       hx-post='/UpdateThreshold'
-    		       hx-target='#mainBoard'
-    		       hx-swap="outerHTML"
-    		       hx-include="#filename">
-    		Invert:
-    		<input type="checkbox" id="invert" name="invert" value="true" 
-    		       hx-post='/UpdateThreshold'
-    		       hx-target='#mainBoard'
-    		       hx-swap="outerHTML"
-    		       hx-include="#filename">
-    	</div>
-    	
-    	<div class="buttonContainer">
-    		<button id="saveBtn" class="btn btn-primary btn-success"
-    		        hx-encoding='multipart/form-data'
-    		        hx-post="/Upload/Save"
-    		        hx-target="body"
-    		        hx-include="#filename">
-    		Save
-    		</button>
-    	</div>
-    </div>
-	
+
+	<form id='formUpdate' hx-encoding='multipart/form-data' hx-post='/UpdateThreshold' hx-target='#mainBoard' hx-swap="outerHTML">
+
+		<div class="uploadContainer">
+			Crop:
+                <input type="checkbox" id="cropImg" name="cropImg" value="true" 
+                       hx-post='/UpdateThreshold'
+                       hx-target='#mainBoard'
+                       hx-swap="outerHTML"
+                       hx-include="#filename">
+                		    
+			<div class="sliderContainer">
+				To B&W:
+				<input type="checkbox" id="toBw" name="toBw" value="true"
+				       hx-post='/UpdateThreshold'
+				       hx-target='#mainBoard'
+				       hx-swap="outerHTML"
+				       hx-include="#filename">
+				Color:
+				<input type="color" onchange="pickColor(this) "name="selectedColor" id="html5colorpicker" value="#000000"
+				       hx-post='/UpdateThreshold'
+				       hx-target='#mainBoard'
+				       hx-swap="outerHTML"
+				       hx-include="#filename">
+				Threshold:
+				<input id="threshold" name="threshold" type="range" min="1" max="100" value="50"
+				       hx-post='/UpdateThreshold'
+				       hx-target='#mainBoard'
+				       hx-swap="outerHTML"
+				       hx-include="#filename">
+				Invert:
+				<input type="checkbox" id="invert" name="invert" value="true"
+				       hx-post='/UpdateThreshold'
+				       hx-target='#mainBoard'
+				       hx-swap="outerHTML"
+				       hx-include="#filename">
+			</div>
+
+			<div class="buttonContainer">
+				<button id="saveBtn" class="btn btn-primary btn-success"
+				        hx-encoding='multipart/form-data'
+				        hx-post="/Upload/Save"
+				        hx-target="body"
+				        hx-include="#filename">
+					Save
+				</button>
+			</div>
+		</div>
+	</form>
 </div>
 
 <script>

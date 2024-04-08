@@ -120,12 +120,6 @@ window.onload = function () {
         cell.addEventListener('mouseleave', function () {
             leaveCell(this);
         });
-        cell.addEventListener('touchstart', function () {
-            enterCell(this);
-        });
-        cell.addEventListener('touchend', function () {
-            leaveCell(this);
-        });
     });
 }
 
