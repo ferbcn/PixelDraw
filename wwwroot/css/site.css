@@ -11,7 +11,6 @@ html {
 
 body{
     scroll: none;
-    touch-action: none;
 }
 
 a{
@@ -194,4 +193,17 @@ input-container {
 .btn:hover{
     background-color: #dd3333;
     color: white;
+}
+
+.linkContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin: 5px;
+    font-size: 1vh;
+    font-weight: bold;
+}
+
+.pageLink{
 }

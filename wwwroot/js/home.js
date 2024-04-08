@@ -28,6 +28,9 @@ var colorPicker = document.getElementById('html5colorpicker');
 console.log("Connecting to " + connectionUrl);
 socket = new WebSocket(connectionUrl);
 
+// disable touch scrolling (for drawing on mobile)
+document.body.setAttribute("style","touch-action: none;");
+
 socket.onopen = function (event) {
     // updateState();
     console.log("Connection opened");
@@ -69,6 +72,7 @@ socket.onmessage = function (event) {
 ///// Buttons and Controls  /////
 /////////////////////////////////
 
+// Color Picker
 colorPicker.addEventListener('change', function() {
     selectedColor = colorPicker.value;
     mainColor = selectedColor;
@@ -109,6 +113,11 @@ function clickCell (i, j) {
 };
 
 
+////////////////////////////////
+// Mouse and Touch Handlers  //
+////////////////////////////////
+
+
 // Cell Enter / Cell leave
 // Cell coloring and animations
 window.onload = function () {
@@ -122,10 +131,6 @@ window.onload = function () {
         });
     });
 }
-
-////////////////////////////////
-// Mouse and Touch Handlers  //
-////////////////////////////////
 
 document.body.addEventListener('mousedown', function(){
     mouseDown = 1;

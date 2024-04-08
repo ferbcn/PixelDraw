@@ -4,6 +4,7 @@
     // Convert Model to List
     List<Board> boards = Model.Boards.ToList();
     List<string> images = Model.b64Images.ToList();;
+    int linkCount = ViewData["Links"] as int? ?? 0;
 }
 
 <h1>Saved Boards</h1>
@@ -58,8 +59,19 @@
         </tr>
     }
 
-
     </tbody>
 </table>
 
 
+<div class="linkContainer">
+    More: 
+    @for (var i = 10; i < linkCount+10; i+=10)
+    {
+        var offset = i - 10;
+        <a asp-action="List" asp-route-offset="@offset">
+            <div class="pageLink">
+                @i
+            </div>
+        </a>
+    }
+</div>

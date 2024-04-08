@@ -23,57 +23,55 @@ namespace MyWebApplication.Controllers
             return RedirectToAction("List", new { offset = 0 });
         }
 
-        // GET: Boards/All/5
+        // GET: Boards/List/5
         public async Task<IActionResult> List(int offset)
         {
             if (_context.Board == null)
             {
-                return Problem("Entity set 'MyWebApplicationContext.Board'  is null.");
+                return Problem("Entity set 'MyWebApplicationContext.Board' is null.");
             }
-            else
+            List<Board> boards = await _context.Board.OrderByDescending(b => b.Id).Skip(offset).Take(10).ToListAsync(); // Order by ID here
+            int boardCount = _context.Board.Count();
+            
+            // Fetch all cells for each board and include in View
+            var boardIds = boards.Select(b => b.Id).ToList();
+            
+            // Get cells for all board IDs
+            var cellList = _context.Cell
+                .Where(c => boardIds.Contains(c.BoardId))
+                .OrderBy(c => c.BoardId)
+                .ToList();
+
+            // Dictionary of boardId and corresponding cells
+            var cellDictionary = cellList
+                .GroupBy(c => c.BoardId)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            // Ensure there is a list (even if it's empty)
+            var boardCellList = boardIds
+                .Select(id => cellDictionary.TryGetValue(id, out var cells) ? cells : new List<Cell>())
+                .ToList();
+            
+            // convert cells tom images
+            List<string> b64ImageList = new List<string>();
+            //foreach (var boardCells in boardCellList)
+            //{ 
+            for(int i = 0; i < boardCellList.Count; i++)
             {
-                
-                List<Board> boards = await _context.Board.OrderByDescending(b => b.Id).Skip(offset).ToListAsync(); // Order by ID here
-                
-                // Fetch all cells for each board and include in View
-                var boardIds = boards.Select(b => b.Id).ToList();
-                
-                // Get cells for all board IDs
-                var cellList = _context.Cell
-                    .Where(c => boardIds.Contains(c.BoardId))
-                    .OrderBy(c => c.BoardId)
-                    .ToList();
-
-                // Dictionary of boardId and corresponding cells
-                var cellDictionary = cellList
-                    .GroupBy(c => c.BoardId)
-                    .ToDictionary(g => g.Key, g => g.ToList());
-
-                // Ensure there is a list (even if it's empty)
-                var boardCellList = boardIds
-                    .Select(id => cellDictionary.TryGetValue(id, out var cells) ? cells : new List<Cell>())
-                    .ToList();
-                
-                // convert cells tom images
-                List<string> b64ImageList = new List<string>();
-                //foreach (var boardCells in boardCellList)
-                //{ 
-                for(int i = 0; i < boardCellList.Count; i++)
-                {
-                    int size = (int) boards[i].Size;
-                    b64ImageList.Add(ImageConverter.ConvertCellsToBase64Image(boardCellList[i], size));
-                }
-                // Include the base64 image strings in the ViewData
-                ViewData["BoardImages"] = b64ImageList;
-                
-                BoardImageCellsViewModel boardImageCellsViewModel = new BoardImageCellsViewModel();
-                boardImageCellsViewModel.Boards = boards;
-                boardImageCellsViewModel.Cells = _context.Cell.ToList();
-                boardImageCellsViewModel.b64Images = b64ImageList;
-                
-                ViewData["Title"] = "Saved Boards";
-                return View("Index", boardImageCellsViewModel);
+                int size = (int) boards[i].Size;
+                b64ImageList.Add(ImageConverter.ConvertCellsToBase64Image(boardCellList[i], size));
             }
+            // Include the base64 image strings in the ViewData
+            ViewData["BoardImages"] = b64ImageList;
+            
+            BoardImageCellsViewModel boardImageCellsViewModel = new BoardImageCellsViewModel();
+            boardImageCellsViewModel.Boards = boards;
+            boardImageCellsViewModel.Cells = _context.Cell.ToList();
+            boardImageCellsViewModel.b64Images = b64ImageList;
+            
+            ViewData["Title"] = "Saved Boards";
+            ViewData["Links"] = boardCount;
+            return View("Index", boardImageCellsViewModel);
         }
 
         // GET: Boards/Details/5
