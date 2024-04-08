@@ -44,8 +44,8 @@
      {
          <button id="more-link" class="btn btn-light moreLink"
                  hx-get="/Board/More?offset=@newOffset"
-                 hx-trigger="intersect once"
-                 hx-swap="beforeend"
+                 hx-trigger="revealed"
+                 hx-swap="afterend"
                  hx-target="#boardTable" hidden>
          </button>
      }
