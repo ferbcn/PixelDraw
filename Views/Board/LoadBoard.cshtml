@@ -8,45 +8,45 @@
     bool moreBoardsAvailable = ViewData["boardsAvailable"] as bool? ?? false;
 }
 
-<div class="table">
-    @for (var i = 0; i < Math.Min(images.Count, boards.Count); i++)
-    {
-        <div class="row">
-            <div class="column">
-                <a asp-action="Load" asp-route-id="@boards[i].Id">
-                    @Html.DisplayFor(modelItem => boards[i].Name)
-                </a>
-            </div>
-            <div class="column">
-                <a asp-action="Load" asp-route-id="@boards[i].Id">
-                    <div class="imgPreviewContainer">
-                        <img class="imgPreview" src="data:image/png;base64,@images[i]"/>
-                    </div>
-                </a>
-            </div>
-            <div class="column">
-                @Html.DisplayFor(modelItem => boards[i].Size)
-            </div>
-            <div class="column">
-                <div class="buttonsContainer">
-                    <a asp-action="Edit" asp-route-id="@boards[i].Id">  
-                        <button class="btn btn-light"><i class="fa-solid fa-edit"></i></button></a>
-                    <a asp-action="Delete" asp-route-id="@boards[i].Id">
-                        <button class="btn btn-light"><i class="fa-solid fa-trash"></i></button></a>
+@for (var i = 0; i < Math.Min(images.Count, boards.Count); i++)
+{
+    <div class="row">
+        <div class="column">
+            <a asp-action="Load" asp-route-id="@boards[i].Id">
+                @Html.DisplayFor(modelItem => boards[i].Name)
+            </a>
+        </div>
+        <div class="column">
+            <a asp-action="Load" asp-route-id="@boards[i].Id">
+                <div class="imgPreviewContainer">
+                    <img class="imgPreview" src="data:image/png;base64,@images[i]"/>
                 </div>
-            </div>  
+            </a>
+        </div>
+        <div class="column">
+            @Html.DisplayFor(modelItem => boards[i].Size)
+        </div>
+        <div class="column">
+            <div class="buttonsContainer">
+                <a asp-action="Edit" asp-route-id="@boards[i].Id">  
+                    <button class="btn btn-light"><i class="fa-solid fa-edit"></i></button></a>
+                <a asp-action="Delete" asp-route-id="@boards[i].Id">
+                    <button class="btn btn-light"><i class="fa-solid fa-trash"></i></button></a>
+            </div>
+        </div>  
+    </div>
+}
+
+@{
+    if (moreBoardsAvailable)
+    {
+        <div id="more-link"
+            hx-get="/Board/More?offset=@newOffset"
+            hx-trigger="intersect once"
+            hx-target="#boardTable"
+            hx-swap="beforeend"
+        >
         </div>
     }
-</div>
+}
 
- @{
-     if (moreBoardsAvailable)
-     {
-         <button id="more-link" class="btn btn-light moreLink"
-                 hx-get="/Board/More?offset=@newOffset"
-                 hx-trigger="revealed"
-                 hx-swap="afterend"
-                 hx-target="#boardTable" hidden>
-         </button>
-     }
- }

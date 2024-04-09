@@ -27,13 +27,15 @@ namespace MyWebApplication.Controllers
         // GET: Boards/More/5
         public async Task<IActionResult> More(int offset)
         {
+            var pageSize = 10;
+            
             if (_context.Board == null)
             {
                 return Problem("Entity set 'MyWebApplicationContext.Board' is null.");
             }
 
             List<Board> boards =
-                await _context.Board.OrderByDescending(b => b.Id).Skip(offset).Take(10)
+                await _context.Board.OrderByDescending(b => b.Id).Skip(offset).Take(pageSize)
                     .ToListAsync(); // Order by ID here
             int boardCount = _context.Board.Count();
 
@@ -73,7 +75,7 @@ namespace MyWebApplication.Controllers
             boardImageCellsViewModel.Boards = boards;
             boardImageCellsViewModel.b64Images = b64ImageList;
 
-            ViewData["newOffset"] = offset + 10;
+            ViewData["newOffset"] = offset + pageSize;
 
             if (offset > boardCount)
             {

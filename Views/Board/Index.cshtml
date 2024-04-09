@@ -10,14 +10,17 @@
 </p>
 
 <div class="table" id="boardTable">
-        
+    <div class="row">
+    </div>
+</div>
+
+<div id="more-link"
+     hx-post="/Board/More?offset=0"
+     hx-trigger="load"
+     hx-target="#boardTable"
+     hx-swap="beforeend"
+     hidden>
 </div>
 
     
-<button id="more-link" class="btn btn-light moreLink"
-        hx-post="/Board/More?offset=0"
-        hx-trigger="revealed"
-        hx-swap="afterend"
-        hx-target="#boardTable" hidden>
-</button>
 
