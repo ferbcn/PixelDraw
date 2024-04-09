@@ -21,7 +21,6 @@ namespace MyWebApplication.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // int totalBoards = _context.Board.Count();
             var allBoards = await _context.Board.ToListAsync();
             Random random = new Random();
             int randomIndex = random.Next(0, allBoards.Count);
@@ -30,12 +29,18 @@ namespace MyWebApplication.Controllers
             return RedirectToAction("Load", "Board", new { id = randomBoardId });
         }
         
-        public async Task<IActionResult> Automata()
+        public async Task<IActionResult> Automata(int? size=50)
         {
-            Board_DTO myboard = new Board_DTO(50);
+            ViewData["Size"] = size.Value;
+            ViewData["Title"] = "Cellular Automata";
+            return View();
+        }
+        
+        public async Task<IActionResult> GetBoard(int? size=50)
+        {
+            Board_DTO myboard = new Board_DTO(size.Value);
             ViewData["Board"] = myboard.GetBoardString();
             ViewData["Size"] = myboard.GetSize();
-            ViewData["Title"] = "Cellular Automata";
             return View();
         }
         

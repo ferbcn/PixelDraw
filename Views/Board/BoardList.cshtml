@@ -30,7 +30,11 @@
             <div class="buttonsContainer">
             <a asp-action="Edit" asp-route-id="@boards[i].Id">  
                 <button class="btn btn-light"><i class="fa-solid fa-edit"></i></button></a>
-                    <button class="btn btn-light" hx-delete="/Board/HXDelete?id=@boards[i].Id" hx-target="closest .row" hx-swap="delete"><i class="fa-solid fa-trash"></i></button>
+            <button class="btn btn-light"
+                    hx-delete="/Board/HXDelete?id=@boards[i].Id"
+                    hx-target="closest .row" hx-swap="delete">
+                <i class="fa-solid fa-trash"></i>
+            </button>
             </div>
         </div>  
     </div>

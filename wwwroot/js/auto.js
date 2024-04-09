@@ -63,10 +63,12 @@ window.onload = function () {
 
 document.body.addEventListener('mousedown', function(){
     mouseDown = true;
+    console.log("Mouse Down");
 });
 
 document.body.addEventListener('mouseup', function(){
     mouseDown = false;
+    console.log("Mouse Up");
 });
 
 document.body.addEventListener('touchstart', function(event){
@@ -142,44 +144,51 @@ function leaveCell(hoverCell) {
 }
 
 
-// Cellular Automata animation
-document.getElementById("btnStart").addEventListener("click", function () {
-    if (animationIsRunning) {
-        console.log("Pausing Cellular Automata");
-        animationIsRunning = false;
-        StopAnimation();
-    }
-    else {
-        console.log("Starting Cellular Automata");
-        animationIsRunning = true;
-        StartAnimation();
-    }
-});
+document.addEventListener('DOMContentLoaded', function (event) {
 
-// Buttons to control the speed of the animation
-document.getElementById("btnMinus").addEventListener("click", function () {
-    if (timeout < 1000) timeout += 50;
-    StopAnimation();
-    StartAnimation();
-
-});
-
-document.getElementById("btnPlus").addEventListener("click", function () {
-    if (timeout > 50) timeout -= 50;
-    StopAnimation();
-    StartAnimation();
-});
-
-document.getElementById("btnReset").addEventListener("click", function () {
-    animationIsRunning = false;
-    genCount = 0;
-    genCountElement.innerHTML = genCount;
-    var allCells = document.querySelectorAll('.cell');
-    allCells.forEach(cell => {
-        cell.style.backgroundColor = baseColor;
-        grid = Array(50).fill().map(() => Array(50).fill('#FFFFFF'));
+    // Cellular Automata animation
+    document.getElementById("btnStart").addEventListener("click", function () {
+        if (animationIsRunning) {
+            console.log("Pausing Cellular Automata");
+            animationIsRunning = false;
+            StopAnimation();
+        }
+        else {
+            console.log("Starting Cellular Automata");
+            animationIsRunning = true;
+            StartAnimation();
+        }
     });
-    StopAnimation();
+
+    // Buttons to control the speed of the animation
+    document.getElementById("btnMinus").addEventListener("click", function () {
+        if (timeout < 1000) timeout += 50;
+        StopAnimation();
+        StartAnimation();
+
+    });
+
+    document.getElementById("btnPlus").addEventListener("click", function () {
+        if (timeout > 50) timeout -= 50;
+        StopAnimation();
+        StartAnimation();
+    });
+
+    document.getElementById("btnReset").addEventListener("click", function () {
+        animationIsRunning = false;
+        genCount = 0;
+        genCountElement.innerHTML = genCount;
+        var allCells = document.querySelectorAll('.cell');
+        allCells.forEach(cell => {
+            cell.style.backgroundColor = baseColor;
+            grid = Array(50).fill().map(() => Array(50).fill('#FFFFFF'));
+        });
+        StopAnimation();
+    });
+    
+    document.getElementById('colorAutomata').addEventListener('change', function () {
+        mainColor = this.value;
+    });
 });
 
 function StopAnimation(){
@@ -244,20 +253,23 @@ function runCellularAutomata(){
     }
     // Count all the colors present in the grid and calculate its percentage
     var colorCount = {};
+    var filledCount = 0;
     for (let i = 0; i < grid.length; i++) {
         for (let j = 0; j < grid[i].length; j++) {
             if (grid[i][j] === baseColor) continue;
             if (grid[i][j] in colorCount) {
                 colorCount[grid[i][j]]++;
+                filledCount++;
             } else {
                 colorCount[grid[i][j]] = 1;
+                filledCount++;
             }
         }
     }
     // Convert each cell to a percentage base = 2500 cells
     for (let color in colorCount) {
         // trim the percentage to 1 decimal places
-        colorCount[color] = (colorCount[color] / 2500 * 100).toFixed(1);
+        colorCount[color] = (colorCount[color] / filledCount * 100).toFixed(1);
     }
     
     // display the values as bar graphs in the browser
@@ -268,7 +280,7 @@ function runCellularAutomata(){
     for (let color in colorCount) {
         let colorBar = document.createElement("div");
         colorBar.style.width = barWidth + "%";
-        colorBar.style.height = colorCount[color]*2 + "%"; // scale the height as the board will never fill above 50%
+        colorBar.style.height = colorCount[color] + "%"; // scale the height as the board will never fill above 50%
         colorBar.style.backgroundColor = color;
         colorBar.innerHTML = colorCount[color] + "%";
         colorBars.appendChild(colorBar);
@@ -301,7 +313,3 @@ function rgbToHex(rgb) {
     }
     return '#' + parts.join('');
 }
-
-document.getElementById('colorAutomata').addEventListener('change', function () {
-    mainColor = this.value;
-});
