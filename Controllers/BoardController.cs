@@ -24,8 +24,8 @@ namespace MyWebApplication.Controllers
             return View("Index");
         }
 
-        // GET: Boards/More/5
-        public async Task<IActionResult> More(int offset)
+        // GET: Boards/List/5
+        public async Task<IActionResult> List(int offset)
         {
             var pageSize = 10;
             
@@ -87,7 +87,7 @@ namespace MyWebApplication.Controllers
                 ViewData["Title"] = "Saved Boards";
                 ViewData["boardsAvailable"] = true;
             }
-            return View("LoadBoard", boardImageCellsViewModel);
+            return View("BoardList", boardImageCellsViewModel);
         }
         
         // GET: Boards/Details/5
@@ -234,7 +234,7 @@ namespace MyWebApplication.Controllers
             //return View(Board);
         }
 
-        // GET: Boards/Delete/5
+        // GET: Board/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Board == null)
@@ -289,7 +289,7 @@ namespace MyWebApplication.Controllers
         {
             if (_context.Board == null)
             {
-                return Problem("Entity set 'MyWebApplicationContext.Board'  is null.");
+                return Problem("Entity set 'MyWebApplicationContext.Board' is null.");
             }
             var Board = await _context.Board.FindAsync(id);
             if (Board != null)
@@ -300,6 +300,26 @@ namespace MyWebApplication.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        
+        // GET: Board/DeleteHX/5
+        [HttpDelete, ActionName("HXDelete")]
+        public async Task<IActionResult> HXDelete (int id)
+        {
+            if (_context.Board == null)
+            {
+                return Problem("Entity set 'MyWebApplicationContext.Board' is null.");
+            }
+            var Board = await _context.Board.FindAsync(id);
+            if (Board != null)
+            {
+                _context.Board.Remove(Board);
+            }
+            
+            await _context.SaveChangesAsync();
+            //return RedirectToAction(nameof(Index));
+            return Ok();
+        }
+
 
         private bool BoardExists(int id)
         {
