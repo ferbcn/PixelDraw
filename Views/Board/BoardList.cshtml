@@ -10,23 +10,38 @@
 
 @for (var i = 0; i < Math.Min(images.Count, boards.Count); i++)
 {
-    <div class="row">
-        <div class="column">
+    if (i == 3)
+    {
+        if (moreBoardsAvailable)
+        {
+            <div id="more-link"
+                 hx-get="/Board/List?offset=@newOffset"
+                 hx-trigger="intersect once"
+                 hx-target="#boardTable"
+                 hx-swap="beforeend"
+            >
+            </div>
+        }
+    }
+    <div class="board-row">
+        <div class="col-4">
             <a asp-action="Load" asp-route-id="@boards[i].Id">
                 @Html.DisplayFor(modelItem => boards[i].Name)
             </a>
         </div>
-        <div class="column">
+        <div class="col-2">
             <a asp-action="Load" asp-route-id="@boards[i].Id">
                 <div class="imgPreviewContainer">
                     <img class="imgPreview" src="data:image/png;base64,@images[i]"/>
                 </div>
             </a>
         </div>
-        <div class="column">
-            @Html.DisplayFor(modelItem => boards[i].Size)
+        <div class="col-2">
+            <div class="boardSizeDisp">
+                @Html.DisplayFor(modelItem => boards[i].Size) x @Html.DisplayFor(modelItem => boards[i].Size)
+            </div>
         </div>
-        <div class="column">
+        <div class="col-3">
             <div class="buttonsContainer">
             <a asp-action="Edit" asp-route-id="@boards[i].Id">  
                 <button class="btn btn-light"><i class="fa-solid fa-edit"></i></button></a>
@@ -37,15 +52,6 @@
 }
 
 @{
-    if (moreBoardsAvailable)
-    {
-        <div id="more-link"
-            hx-get="/Board/List?offset=@newOffset"
-            hx-trigger="intersect once"
-            hx-target="#boardTable"
-            hx-swap="beforeend"
-        >
-        </div>
-    }
+    
 }
 
