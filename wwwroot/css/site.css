@@ -60,6 +60,7 @@ a:hover{
     align-items: center;
     box-shadow: black 3px 3px 3px;
     height: 80px;
+    border-radius: 5px;
 }
 .board-row:hover{
     background-color: var(--accent-color);
@@ -182,8 +183,13 @@ table {
 .imgPreviewContainer{
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
+}
+
+.imgPreview{
+    border-radius: 5px;
+    max-width: 7vw;
 }
 
 
@@ -265,4 +271,9 @@ table{
 .boardSizeDisp{
     color: var(--primary-color);
     font-size: 1vh;
+}
+
+.fadeOut {
+    opacity: 0;
+    transition: opacity 0.5s linear;
 }
