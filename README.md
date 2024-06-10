@@ -13,7 +13,7 @@ drawings or download them to file. Pixel-Draw allows users to upload images and 
 - Plus: Cellular Automata JS animation
 
 ### Trying the App
-Link: [https://pixeldraw.azurewebsites.net/](https://pixeldraw.azurewebsites.net/)
+[https://pixeldraw.azurewebsites.net/](https://pixeldraw.azurewebsites.net/)
 
 ![App screenshot](screen.png)
 
