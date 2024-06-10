@@ -109,7 +109,14 @@ namespace MyWebApplication.Controllers
 				return View("Image");
 			}
 
-			var mes = "Not and Image";
+			var mes = "";
+			
+			if (formFile.ContentType.Contains("presentation") && formFile.ContentType.Contains("officedocument"))
+			{
+				PowerPointConverter.convert(new string[] { filePath });
+			}
+
+			mes = "Not and Image";
 			// Process uploaded files
 			// Don't rely on or trust the FileName property without validation.
 			return Ok(new { mes });
